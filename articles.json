@@ -1,0 +1,43 @@
+[
+    {
+        "title": "5 Tips for Managing Chemo Brain Fog",
+        "excerpt": "Practical cognitive strategies to help maintain focus during treatment.",
+        "category": "Chemo",
+        "url": "chemo/brain-fog-tips.html",
+        "image": "assets/article-brainfog.jpg",
+        "date": "2025-10-25"
+    },
+    {
+        "title": "Protein Power: Why It's Crucial During Treatment",
+        "excerpt": "Simple ways to increase your daily protein intake for better recovery.",
+        "category": "Nutrition",
+        "url": "nutrition/protein-power.html",
+        "image": "assets/article-protein.jpg",
+        "date": "2025-10-24"
+    },
+    {
+        "title": "Finding a Moment of Calm: 3 Breathing Exercises",
+        "excerpt": "Quick, guided exercises to reduce immediate stress and anxiety.",
+        "category": "Mindfulness",
+        "url": "mindfulness/breathing-exercises.html",
+        "image": "assets/article-breathing.jpg",
+        "date": "2025-10-23"
+    },
+    {
+        "title": "The Role of Personalized Medicine in Care",
+        "excerpt": "An explanation of genetic testing and how it shapes your treatment plan.",
+        "category": "Research",
+        "url": "research/personalized-medicine.html",
+        "image": "assets/article-genetics.jpg",
+        "date": "2025-10-22"
+    },
+    {
+        "title": "Is Acupuncture Safe During Chemotherapy?",
+        "excerpt": "A review of the evidence for using acupuncture to manage nausea and pain.",
+        "category": "Alternative",
+        "url": "alternative/acupuncture-safety.html",
+        "image": "assets/article-acupuncture.jpg",
+        "date": "2025-10-21"
+    }
+    // Add more articles here
+]

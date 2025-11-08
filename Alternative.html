@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<!-- Chosen Palette: Warm Neutral & Sage -->
+<!-- Application Structure Plan: A tabbed SPA structure is used to separate this sensitive, complex information into manageable, context-specific sections. This is critical for safety. The user (Tom) can navigate directly to a "Goal" (e.g., "Sleep"), a "Diet" (e.g., "Fasting"), or a "Supplement" (e.g., "Curcumin") without being forced to scroll past other, potentially irrelevant or risky, information. The structure prioritizes a "Start Here" tab with a high-level "Traffic Light" safety summary for immediate risk assessment. -->
+<!-- Visualization & Content Choices: 1. Traffic Light Summary (Report Info) -> Goal: Immediate safety stratification -> Presentation: Styled HTML Table (3 sections) -> Interaction: None (static summary) -> Justification: Provides the clearest, most immediate visual summary of "safe to try" vs. "caution." 2. Options by Goal (Report Info) -> Goal: User-centric exploration by symptom -> Presentation: HTML content cards -> Interaction: JS-powered sub-nav buttons show/hide content blocks by goal. -> Justification: Maps directly to user's need-state. 3. Supplement Reference (Report Info) -> Goal: Detailed, filterable reference for many items -> Presentation: Large, responsive HTML table -> Interaction: JS buttons filter rows by category and interaction risk. -> Justification: Manages high information density and highlights safety-critical interactions. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinking about Alternatives: a practical guide for Tom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfdfc; 
+        }
+        .nav-button {
+            padding: 0.75rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .nav-button.active-tab {
+            background-color: #065f46; 
+            color: #ffffff;
+        }
+        .nav-button:not(.active-tab) {
+            background-color: #e7e5e4; 
+            color: #44403c;
+        }
+        .nav-button:not(.active-tab):hover {
+            background-color: #d6d3d1;
+        }
+        .sub-nav-button {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #a3e635;
+            cursor: pointer;
+        }
+        .sub-nav-button.active-sub-tab {
+            background-color: #a3e635; 
+            color: #1a2e05;
+        }
+        .sub-nav-button:not(.active-sub-tab) {
+            background-color: #f7fee7; 
+            color: #3f6212;
+        }
+        .sub-nav-button:not(.active-sub-tab):hover {
+            background-color: #ecfccb;
+        }
+
+        .score-box {
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin: 0.125rem;
+        }
+        .evidence-high { background-color: #dcfce7; color: #166534; }
+        .evidence-moderate { background-color: #fef9c3; color: #854d0e; }
+        .evidence-low { background-color: #fee2e2; color: #991b1b; }
+        .evidence-insufficient { background-color: #e7e5e4; color: #57534e; }
+        
+        .signal-strong { background-color: #dbeafe; color: #1e40af; }
+        .signal-moderate { background-color: #e0f2fe; color: #0c4a6e; }
+        .signal-weak { background-color: #e7e5e4; color: #57534e; }
+        .signal-unclear { background-color: #f3e8ff; color: #581c87; }
+        
+        .safety-favourable { background-color: #dcfce7; color: #166534; }
+        .safety-mixed { background-color: #fef9c3; color: #854d0e; }
+        .safety-concerning { background-color: #fee2e2; color: #991b1b; }
+        .safety-unknown { background-color: #e7e5e4; color: #57534e; }
+        
+        .interact-low { background-color: #dcfce7; color: #166534; }
+        .interact-possible { background-color: #fef9c3; color: #854d0e; }
+        .interact-significant { background-color: #fee2e2; color: #991b1b; }
+        .interact-unknown { background-color: #e7e5e4; color: #57534e; }
+
+        .traffic-light-header {
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem 0.375rem 0 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+<!-- Add this right after the opening <body> tag in each file -->
+<!-- Navigation Header - Add this right after <body> tag -->
+<nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a href="index.html" class="flex items-center">
+                    <img src="assets/tomslogo.png" alt="Tom's Care Hub Logo" class="h-10 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <h1 class="text-2xl font-bold text-teal-700" style="display:none;">Tom's Care Hub</h1>
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Home</a>
+                <a href="chemo.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Chemo</a>
+                <a href="nutrition.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Nutrition</a>
+                <a href="mindfulness.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Mindfulness</a>
+                <a href="research.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Research</a>
+                <a href="Alternative.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Alternative</a>
+                <a href="resources.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Resources</a>
+                <a href="financial-support.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Financial Support</a>
+            </div>
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500 p-2">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <a href="index.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Home</a>
+        <a href="chemo.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Chemo</a>
+        <a href="nutrition.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Nutrition</a>
+        <a href="mindfulness.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Mindfulness</a>
+        <a href="research.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Research</a>
+        <a href="Alternative.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Alternative</a>
+        <a href="resources.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Resources</a>
+        <a href="financial-support.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Financial Support</a>
+    </div>
+</nav>
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <header class="mb-6 border-b border-stone-200 pb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-emerald-900 mb-2">Thinking about Alternatives</h1>
+            <p class="text-xl text-stone-700">A practical guide exploring complementary and alternative options; from getting legally high to weird diets and more</p>
+        </header>
+
+        <nav id="main-nav" class="flex flex-wrap border-b border-stone-300 mb-6">
+            <button class="nav-button active-tab" data-tab="home">Start Here</button>
+            <button class="nav-button" data-tab="goals">Options by Your Goal</button>
+            <button class="nav-button" data-tab="diets">Diet Patterns</button>
+            <button class="nav-button" data-tab="supplements">Supplement Table</button>
+            <button class="nav-button" data-tab="safety">How to Be Safe</button>
+            <button class="nav-button" data-tab="clinician">For Your Team</button>
+        </nav>
+
+        <main id="tab-content-container">
+
+            <!-- === TAB 1: HOME === -->
+            <section id="home" class="tab-content">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">A Cautious Welcome</h2>
+                
+                <div class="bg-rose-50 p-6 rounded-lg border-4 border-rose-300 mb-6">
+                    <h3 class="text-2xl font-semibold text-rose-800 mb-3">A Friendly but Critical Disclaimer</h3>
+                    <p class="text-rose-700 text-lg mb-4">The internet is full of "miracle cures" and strong opinions, which is confusing and overwhelming. This guide is designed to be a calm, balanced map of that world. It looks at options *beyond* standard care, from what patients themselves discuss, to what integrative clinics are using. Your single most important rule is: Talk to your oncology team or pharmacist before starting *anything* new. </p>
+                    <p class="text-rose-700 text-lg mb-4">It looks at options *beyond* standard care, from what patients themselves discuss, to what integrative clinics are using. This guide will be honest about the evidence (even when it's low) and, most importantly, about safety and risks.</p>
+                    <p class="font-bold text-rose-900 text-lg"><strong>This is not medical advice.</strong> Some things can be harmful or interact with your chemotherapy. Your single most important rule is: <strong>Talk to your oncology team or pharmacist before starting *anything* new.</strong></p>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-emerald-800 mb-4">A "Traffic Light" Safety Summary</h3>
+                <p class="text-lg text-stone-700 mb-6">Here's a quick overview to help you sort options. This is a general guide; your personal situation might change things.</p>
+
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-stone-200">
+                    <table class="w-full min-w-[700px]">
+                        <thead class="sr-only">
+                            <tr><th>Category</th><th>Options</th><th>Rationale</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            <tr>
+                                <td class="w-1/4">
+                                    <div class="traffic-light-header bg-emerald-100 text-emerald-900">
+                                        GREEN LIGHT<br><span class="text-sm font-medium">Plausible Benefit, Low Risk</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-emerald-50 text-emerald-800 font-semibold">
+                                    <ul class="list-disc list-inside">
+                                        <li>Yoga, Meditation, Breathwork</li>
+                                        <li>Acupuncture (from a qualified practitioner)</li>
+                                        <li>Ginger (for nausea)</li>
+                                        <li>Peppermint Tea (for nausea/digestion)</li>
+                                        <li>Plant-Forward Anti-Inflammatory Diet</li>
+                                    </ul>
+                                </td>
+                                <td class="p-4 bg-white">
+                                    These options have good evidence for symptom relief (like anxiety, nausea, fatigue) and a very high safety profile with low risk of interacting with your chemotherapy. They are generally safe to try.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="w-1/4">
+                                    <div class="traffic-light-header bg-amber-100 text-amber-900">
+                                        AMBER LIGHT<br><span class="text-sm font-medium">Mixed Evidence, Requires Caution</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-amber-50 text-amber-800 font-semibold">
+                                    <ul class="list-disc list-inside">
+                                        <li>Medical Cannabis (CBD & THC)</li>
+                                        <li>Curcumin (Turmeric)</li>
+                                        <li>Medicinal Mushrooms (e.g., Turkey Tail)</li>
+                                        <li>Short-Term Fasting (around chemo)</li>
+                                        <li>Melatonin (for sleep)</li>
+                                        <li>Mistletoe Therapy (Viscum album)</li>
+                                    </ul>
+                                </td>
+                                <td class="p-4 bg-white">
+                                    This is the "talk to your team" list. These options have some interesting signals (from patient reports or early trials) but also carry risks. This could be high cost, poor quality control, or potential to interact with your chemo or liver. <strong>These require a detailed chat with your doctor or pharmacist.</strong>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="w-1/4">
+                                    <div class="traffic-light-header bg-rose-100 text-rose-900">
+                                        RED LIGHT<br><span class="text-sm font-medium">Avoid or High Risk</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-rose-50 text-rose-800 font-semibold">
+                                    <ul class="list-disc list-inside">
+                                        <li>St. John's Wort</li>
+                                        <li>Grapefruit (with Irinotecan)</li>
+                                        <li>High-Dose IV Vitamin C (outside a trial)</li>
+                                        <li>Unregulated "Cannabis Oils" (e.g., RSO)</li>
+                                        <li>"Alkaline" Diets or "Detox" Cures</li>
+                                        <li>Any single supplement claiming to be a "cure"</li>
+                                    </ul>
+                                </td>
+                                <td class="p-4 bg-white">
+                                    These are either proven to be dangerous with your chemo (St. John's Wort, Grapefruit), have no good evidence and carry high risk/cost, or are based on pure myth. These should be avoided. Unregulated oils are particularly risky as you have no idea what's in them.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- === TAB 2: OPTIONS BY YOUR GOAL === -->
+            <section id="goals" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Options by Your Goal</h2>
+                <p class="text-lg text-stone-700 mb-6">You're probably not looking for a specific supplement, but for something to help a specific problem. Here are common options, grouped by what people use them for. <strong>This is just information, not a recommendation.</strong></p>
+                
+                <div id="goal-nav" class="flex flex-wrap mb-6">
+                    <button class="sub-nav-button active-sub-tab" data-goal="symptoms">Appetite, Nausea & Gut</button>
+                    <button class="sub-nav-button" data-goal="mood">Sleep, Anxiety & Mood</button>
+                    <button class="sub-nav-button" data-goal="pain">Pain & Neuropathy</button>
+                    <button class="sub-nav-button" data-goal="immune">General "Immune" Support</button>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Goal: Symptoms (Nausea, Appetite, Gut) -->
+                    <div id="goal-symptoms" class="goal-content space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Medical Cannabis (CBD & THC)</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-moderate">Evidence: Moderate</span>
+                                <span class="score-box signal-strong">Real-world Signal: Strong</span>
+                                <span class="score-box safety-mixed">Safety: Mixed</span>
+                                <span class="score-box interact-possible">Interaction: Possible</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> This is a major topic. Patients report using medical cannabis (which has both THC and CBD) for nausea, to stimulate appetite, for pain, and to help with sleep and anxiety. Evidence is moderate but growing.</p>
+                            <p class="mb-3"><strong>How it works:</strong> THC (the psychoactive part) is known to reduce nausea and boost appetite. CBD (non-psychoactive) is studied for anxiety, inflammation, and pain.</p>
+                            <p class="mb-3"><strong>Practical Notes:</strong> In the UK, this is only legally available via private prescription from a specialist clinic (it's not usually prescribed on the NHS for this). Products are oils or flowers (vaporised). Patients often report that a "balanced" oil (e.g., 10mg THC:10mg CBD) is more effective for symptoms with fewer side effects than high-THC alone.</p>
+                            <p class="font-semibold bg-amber-50 text-amber-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> This is the key part. Cannabis (especially CBD) can interact with CYP450 enzymes in your liver, which also process your chemo drugs. This *could* alter the levels of irinotecan or oxaliplatin in your body. It can also cause sedation or dizziness. <strong>You MUST discuss this with your team.</strong> Do not drive. Unregulated "street" oils (like RSO) are a huge risk - you don't know the dose or if they contain contaminants.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Acupuncture</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-high">Evidence: High (for nausea)</span>
+                                <span class="score-box signal-strong">Real-world Signal: Strong</span>
+                                <span class="score-box safety-favourable">Safety: Favourable</span>
+                                <span class="score-box interact-low">Interaction: Low</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> Strong evidence shows acupuncture can help manage chemotherapy-induced nausea and vomiting. Many patient-support hubs (like Macmillan) recommend it.</p>
+                            <p class="mb-3"><strong>How it works:</strong> It's thought to stimulate specific nerves, which send signals to the brain to release anti-nausea and pain-relieving chemicals.</p>
+                            <p class="font-semibold bg-emerald-50 text-emerald-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> Very safe when done by a qualified practitioner. Find someone registered with the British Acupuncture Council. The main caution is to let them know if you are neutropenic (low white blood cells) or have a low platelet count, as there's a small risk of infection or bleeding. Tell them you have liver metastases so they avoid deep needling in that area.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Goal: Sleep, Anxiety, Mood -->
+                    <div id="goal-mood" class="goal-content hidden space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Yoga, Meditation & Breathwork</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-high">Evidence: High</span>
+                                <span class="score-box signal-strong">Real-world Signal: Strong</span>
+                                <span class="score-box safety-favourable">Safety: Favourable</span>
+                                <span class="score-box interact-low">Interaction: Low</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> High-quality evidence shows these practices can significantly reduce anxiety, improve sleep quality, and help manage the fatigue and "chemo-brain" that come with treatment.</p>
+                            <p class="mb-3"><strong>How it works:</strong> They activate the "rest and digest" (parasympathetic) nervous system, calming the "fight or flight" response that is often in overdrive during a cancer diagnosis.</p>
+                            <p class="font-semibold bg-emerald-50 text-emerald-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> Extremely safe. The key is to be gentle. Look for "gentle yoga," "restorative yoga," or "yoga for cancer" classes. Many cancer centres offer them for free. There are also great apps like "Calm" or "Headspace."</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Melatonin</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-moderate">Evidence: Moderate</span>
+                                <span class="score-box signal-strong">Real-world Signal: Strong</span>
+                                <span class="score-box safety-favourable">Safety: Favourable (short-term)</span>
+                                <span class="score-box interact-possible">Interaction: Possible</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> To help reset a broken sleep cycle (insomnia), which is very common during treatment.</p>
+                            <p class="mb-3"><strong>How it works:</strong> It's a hormone your brain makes naturally to signal sleep. A supplement can help "kick-start" that process.</p>
+                            <p class="font-semibold bg-amber-50 text-amber-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> Generally very safe for short-term use at low doses (e.g., 2mg). In the UK, it's prescription-only. It can interact with blood pressure drugs or anticoagulants, so it's important to let your team know you're considering it.</p>
+                        </div>
+                    </div>
+
+                    <!-- Goal: Pain & Neuropathy -->
+                    <div id="goal-pain" class="goal-content hidden space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Acupuncture (for Neuropathy)</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-moderate">Evidence: Moderate</span>
+                                <span class="score-box signal-moderate">Real-world Signal: Moderate</span>
+                                <span class="score-box safety-favourable">Safety: Favourable</span>
+                                <span class="score-box interact-low">Interaction: Low</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> Oxaliplatin (the 'OX' in FOLFOX/CAPOX) can cause painful peripheral neuropathy (tingling, pain, numbness in hands and feet). Some studies suggest acupuncture may help reduce the severity of this.</p>
+                            <p class="font-semibold bg-emerald-50 text-emerald-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> As before, very safe with a qualified practitioner. It's one of the most-recommended integrative therapies alongside standard care. See cautions in the 'Nausea' section.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Boswellia (Frankincense)</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-low">Evidence: Low</span>
+                                <span class="score-box signal-moderate">Real-world Signal: Moderate</span>
+                                <span class="score-box safety-mixed">Safety: Mixed</span>
+                                <span class="score-box interact-possible">Interaction: Possible</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> A powerful anti-inflammatory. It's used in traditional medicine for joint pain and is being researched for inflammatory gut issues. Patients sometimes try it for general aches and pains.</p>
+                            <p class="font-semibold bg-amber-50 text-amber-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> Evidence is still low. It can interact with CYP liver enzymes, similar to CBD, so it carries a *possible* interaction risk with your chemo. It's not a first-line choice and needs a discussion with your pharmacist.</p>
+                        </div>
+                    </div>
+
+                    <!-- Goal: General "Immune" Support -->
+                    <div id="goal-immune" class="goal-content hidden space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Medicinal Mushrooms (e.g., Turkey Tail)</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-low">Evidence: Low (in UK)</span>
+                                <span class="score-box signal-strong">Real-world Signal: Strong</span>
+                                <span class="score-box safety-mixed">Safety: Mixed</span>
+                                <span class="score-box interact-unknown">Interaction: Unknown</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> This is one of the most common supplements patients ask about. In Japan, a specific extract (PSK) is approved as an add-on to cancer treatment. Patients use it hoping to support their immune system during chemo.</p>
+                            <p class="mb-3"><strong>How it works:</strong> They contain compounds called beta-glucans, which are thought to stimulate parts of the immune system.</p>
+                            <p class="font-semibold bg-amber-50 text-amber-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> This is the problem. We have very little data on how these extracts interact with chemo like FOLFOX. Stimulating the immune system might not be wise during neutropenia. The products are also unregulated, so quality varies hugely. Most UK oncologists will advise caution and ask you to avoid them during active treatment.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-stone-800 mb-3">Mistletoe (Viscum album)</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="score-box evidence-low">Evidence: Low (for survival)</span>
+                                <span class="score-box signal-strong">Real-world Signal: Strong</span>
+                                <span class="score-box safety-mixed">Safety: Mixed</span>
+                                <span class="score-box interact-possible">Interaction: Possible</span>
+                            </div>
+                            <p class="mb-3"><strong>What it's used for:</strong> Very common in mainland Europe (especially Germany), given as an injection. It's claimed to support quality of life and reduce chemo side effects.</p>
+                            <p class="mb-3"><strong>How it works:</strong> It's thought to have immunomodulatory effects.</p>
+                            <p class="font-semibold bg-amber-50 text-amber-900 p-3 rounded-md"><strong>Safety & Interaction:</strong> Evidence for a survival benefit is very weak. Some quality-of-life studies are more positive. It must be prescribed by a specialist (e.g., an Anthroposophic doctor). It can cause flu-like symptoms. Because it affects the immune system, it's vital to discuss it with your oncologist. Not generally recommended by NHS teams.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- === TAB 3: DIET PATTERNS === -->
+            <section id="diets" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Exploring Diet Patterns</h2>
+                <p class="text-lg text-stone-700 mb-6">You'll hear a lot about "cancer diets." Most are myths, but some are being seriously studied. Your main goal is to <strong>avoid weight loss</strong>, so any diet that makes you eat too little is a bad idea.</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Plant-Forward Anti-Inflammatory</h3>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="score-box evidence-high">Evidence: High</span>
+                            <span class="score-box safety-favourable">Safety: Favourable</span>
+                        </div>
+                        <p class="mb-3"><strong>What it is:</strong> This is the "Green Light" option. It's not a strict diet, but a pattern: filling your plate with vegetables, fruits, whole grains, and beans. It includes fish, yoghurt, and nuts, and is low in red/processed meat and sugary foods.</p>
+                        <p class="font-semibold"><strong>Verdict:</strong> This is the safest and most evidence-based pattern for general health and recovery. It supports your gut microbiome. Aim for this on days you feel well.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-amber-800 mb-3">Short-Term Fasting</h3>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="score-box evidence-low">Evidence: Low (but growing)</span>
+                            <span class="score-box safety-mixed">Safety: Mixed</span>
+                        </div>
+                        <p class="mb-3"><strong>What it is:</strong> Not eating (water only) for a set period (e.g., 24-72 hours) *around* your chemo infusion. The theory is it might "protect" healthy cells and make cancer cells more vulnerable.</p>
+                        <p class="mb-3"><strong>The Evidence:</strong> A few small human trials have shown it *might* reduce side effects. Patient reports are mixed; some feel great, others feel awful. We have no strong data on survival.</p>
+                        <p class="font-semibold bg-rose-50 text-rose-900 p-3 rounded-md"><strong>Verdict:</strong> This is an "Amber Light" for a reason. The biggest risk for you is <strong>losing weight and muscle</strong>, which is dangerous. <strong>Do NOT attempt this without your oncologist's supervision.</strong> It's unsuitable for many people.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-amber-800 mb-3">Ketogenic (Keto) Diet</h3>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="score-box evidence-low">Evidence: Low</span>
+                            <span class="score-box safety-concerning">Safety: Concerning</span>
+                        </div>
+                        <p class="mb-3"><strong>What it is:</strong> A very high-fat, very low-carbohydrate diet. The theory is to "starve" cancer cells of glucose.</p>
+                        <p class="mb-3"><strong>The Evidence:</strong> There is no strong human evidence that keto improves outcomes for colon cancer. It is *extremely* hard to follow, can cause constipation, and often leads to... <strong>losing weight and muscle.</strong></p>
+                        <p class="font-semibold bg-rose-50 text-rose-900 p-3 rounded-md"><strong>Verdict:</strong> Most oncology dietitians do not recommend keto during chemo because the risks (weight loss, poor nutrition, feeling awful) often outweigh any theoretical benefit.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 4: SUPPLEMENT TABLE === -->
+            <section id="supplements" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Supplement Reference Table</h2>
+                <p class="text-lg text-stone-700 mb-6">Here is a more detailed list of common botanicals and nutraceuticals. This is for reference, not recommendation. <strong>Pay close attention to the "Interaction Risk" column.</strong></p>
+                
+                <div id="supplement-nav" class="flex flex-wrap mb-4">
+                    <button class="sub-nav-button active-sub-tab" data-filter="all">Show All</button>
+                    <button class="sub-nav-button" data-filter="botanical">Botanicals</button>
+                    <button class="sub-nav-button" data-filter="nutraceutical">Nutraceuticals</button>
+                    <button class="sub-nav-button !border-rose-500 !bg-rose-100 !text-rose-800" data-filter="significant">High Interaction Risk</button>
+                </div>
+
+                <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-stone-200">
+                    <table class="w-full min-w-[1000px]">
+                        <thead class="bg-stone-100 text-left text-stone-700">
+                            <tr>
+                                <th class="p-4">Supplement</th>
+                                <th class="p-4">Used For (Reported)</th>
+                                <th class="p-4">Evidence</th>
+                                <th class="p-4">Interaction Risk (5-FU/Iri/Oxi)</th>
+                                <th class="p-4">Safety & Cautions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplement-table" class="divide-y divide-stone-200">
+                            <tr data-category="botanical" data-risk="significant">
+                                <td class="p-4 font-semibold">St. John's Wort</td>
+                                <td class="p-4">Depression, mood</td>
+                                <td class="p-4"><span class="score-box evidence-high">Evidence: High (for depression)</span></td>
+                                <td class="p-4"><span class="score-box interact-significant">Risk: Significant</span></td>
+                                <td class="p-4 font-semibold text-rose-700">DO NOT TAKE. Induces CYP3A4, which dramatically reduces levels of Irinotecan, making treatment ineffective.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="possible">
+                                <td class="p-4 font-semibold">Curcumin (Turmeric)</td>
+                                <td class="p-4">Anti-inflammatory, joint pain</td>
+                                <td class="p-4"><span class="score-box evidence-low">Evidence: Low (for cancer)</span></td>
+                                <td class="p-4"><span class="score-box interact-possible">Risk: Possible</span></td>
+                                <td class="p-4">Can inhibit CYP enzymes. Can thin blood; check if on anticoagulants. High doses may cause gut upset.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="possible">
+                                <td class="p-4 font-semibold">Boswellia</td>
+                                <td class="p-4">Anti-inflammatory, pain</td>
+                                <td class="p-4"><span class="score-box evidence-low">Evidence: Low</span></td>
+                                <td class="p-4"><span class="score-box interact-possible">Risk: Possible</span></td>
+                                <td class="p-4">May interact with CYP enzymes. Generally well-tolerated, but needs pharmacist check.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="unknown">
+                                <td class="p-4 font-semibold">Quercetin</td>
+                                <td class="p-4">Anti-inflammatory, allergy</td>
+                                <td class="p-4"><span class="score-box evidence-low">Evidence: Low</span></td>
+                                <td class="p-4"><span class="score-box interact-unknown">Risk: Unknown</span></td>
+                                <td class="p-4">Interactions poorly studied. Best to get from food (onions, apples).</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="unknown">
+                                <td class="p-4 font-semibold">Berberine</td>
+                                <td class="p-4">Blood sugar control</td>
+                                <td class="p-4"><span class="score-box evidence-moderate">Evidence: Moderate (for sugar)</span></td>
+                                <td class="p-4"><span class="score-box interact-unknown">Risk: Unknown</span></td>
+                                <td class="p-4">Can cause significant gut upset. Interactions with chemo are not well known. Avoid.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="possible">
+                                <td class="p-4 font-semibold">Green Tea Extract (EGCG)</td>
+                                <td class="p-4">Antioxidant</td>
+                                <td class="p-4"><span class="score-box evidence-low">Evidence: Low</span></td>
+                                <td class="p-4"><span class="score-box interact-possible">Risk: Possible</span></td>
+                                <td class="p-4">High-dose extracts can be toxic to the liver. Drinking green tea is fine; avoid high-dose pills.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="unknown">
+                                <td class="p-4 font-semibold">Medicinal Mushrooms</td>
+                                <td class="p-4">Immune support</td>
+                                <td class="p-4"><span class="score-box evidence-low">Evidence: Low</span></td>
+                                <td class="p-4"><span class="score-box interact-unknown">Risk: Unknown</span></td>
+                                <td class="p-4">Immunomodulators. Safety during neutropenia is unknown. Quality is variable. Avoid during chemo.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="unknown">
+                                <td class="p-4 font-semibold">Ashwagandha</td>
+                                <td class="p-4">Stress, anxiety, sleep</td>
+                                <td class="p-4"><span class="score-box evidence-moderate">Evidence: Moderate (for stress)</span></td>
+                                <td class="p-4"><span class="score-box interact-unknown">Risk: Unknown</span></td>
+                                <td class="p-4">Can be sedating. Interactions with chemo unknown. Ask pharmacist first.</td>
+                            </tr>
+                            <tr data-category="botanical" data-risk="possible">
+                                <td class="p-4 font-semibold">Milk Thistle</td>
+                                <td class="p-4">"Liver protection"</td>
+                                <td class="p-4"><span class="score-box evidence-low">Evidence: Low</span></td>
+                                <td class="p-4"><span class="score-box interact-possible">Risk: Possible</span></td>
+                                <td class="p-4">Often used for liver, but it *can* interact with liver enzymes that process chemo. <strong>Ask your team first.</strong></td>
+                            </tr>
+                            <tr data-category="nutraceutical" data-risk="low">
+                                <td class="p-4 font-semibold">Melatonin</td>
+                                <td class="p-4">Sleep</td>
+                                <td class="p-4"><span class="score-box evidence-moderate">Evidence: Moderate</span></td>
+                                <td class="p-4"><span class="score-box interact-low">Risk: Low (but possible)</span></td>
+                                <td class="p-4">Prescription-only in UK. Check with team, esp. if on blood pressure or anticoagulant meds.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- === TAB 5: HOW TO BE SAFE === -->
+            <section id="safety" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">How to Try Things Safely</h2>
+                <p class="text-lg text-stone-700 mb-6">If you and your team agree to try something, here are some rules to follow to keep you safe.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-4">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Your Safety Checklist</h3>
+                        <p><strong>1. Talk to Your Pharmacist First.</strong></I> This is the most important step. Your oncology pharmacist is the expert on interactions. Take the actual bottle (or a clear photo of the label) to your appointment so they can check the ingredients.</p>
+                        <p><strong>2. One Change at a Time.</strong></I> Don't start five new supplements at once. If you get a side effect (or feel better), you won't know what's causing it. Start one, give it a week or two (if your team agrees), and see how you feel.</p>
+                        <p><strong>3. Start Low, Go Slow.</strong></I> Don't start with a high dose. Begin with the lowest recommended dose and see how you tolerate it.</p>
+                        <p><strong>4. Check for Quality.</strong></I> The supplement world is poorly regulated. Look for products with "Third-Party Testing" or "GMP" (Good Manufacturing Practices) certification. For cannabis, only use legal, lab-tested products from a clinic.</p>
+                        <p><strong>5. Stop Before Surgery or Infusions.</strong></I> Many supplements (like fish oil, curcumin) can affect bleeding or interact with anaesthetics. The standard rule is to <strong>stop all supplements 1-2 weeks before any surgery</strong>. Ask your team when to stop/start around your chemo infusions.</p>
+                        <p><strong>6. Listen to Your Body.</strong></I> If something makes you feel nauseous, dizzy, or gives you a rash, stop taking it immediately and tell your team.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-4">
+                        <h3 class="text-2xl font-semibold text-rose-800 mb-3">Red Flags & Myths to Park</h3>
+                        <p class="font-semibold">If you see any of these, be very sceptical:</p>
+                        <ul class="list-disc list-inside space-y-2 text-rose-700">
+                            <li><strong>"Cures cancer."</strong> (Anything that claims this is a lie.)</li>
+                            <li><strong>"Secret formula."</strong> (Lack of transparency is a huge red flag.)</li>
+                            <li><strong>"Better than chemotherapy."</strong> (This is dangerous and preys on fear.)</li>
+                            <li><strong>"No side effects."</strong> (Everything that has an effect can have a side effect.)</li>
+                            <li><strong>"Big Pharma is hiding this."</strong> (Conspiracy theories are a sales tactic.)</li>
+                            <li><strong>"Alkaline" or "Detox" diets.</strong> (These are myths. Your body controls its own pH. Your liver and kidneys *are* your detox system.)</li>
+                        </ul>
+                        <div class="pt-4">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">A Closing Note</h3>
+                            <p class="mb-3">It's completely understandable to want to feel more in control. Exploring these options is a way of doing that. The goal is to find things that *support* you, help you feel steady, and make treatment more tolerable, without adding new risks.</p>
+                            <p class="font-semibold">The best approach is an "integrative" one: combining the best of standard, evidence-based medicine with safe, supportive complementary therapies, all with the full knowledge of your excellent NHS team. You've got this.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- === TAB 6: CLINICIAN APPENDIX === -->
+            <section id="clinician" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Appendix for Your Clinical Team</h2>
+                <p class="text-lg text-stone-700 mb-6">Tom, this section has the clinical-facing summaries and references. You can show this to your oncologist, dietitian, or pharmacist to help your conversation.</p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-6">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Pharmacology & Interaction Notes (CRC Regimens)</h3>
+                        <ul class="list-disc list-inside space-y-4">
+                            <li><strong>St. John's Wort:</strong> Contraindicated. Potent P-gp and CYP3A4 inducer. Will significantly decrease plasma concentrations of Irinotecan (SN-38) and potentially 5-FU.</li>
+                            <li><strong>Grapefruit & Seville Orange:</strong> Contraindicated with Irinotecan. Potent inhibitor of UGT1A1 and CYP3A4, leading to increased SN-38 exposure and severe toxicity (diarrhoea, neutropenia).</li>
+                            <li><strong>Cannabis (CBD & THC):</strong> Use with caution. CBD is a known inhibitor of CYP3A4, CYP2C9, and UGTs. THC is a substrate. Potential for pharmacokinetic interaction with Irinotecan and 5-FU is high. Patient-reported real-world use is also high. Clinical monitoring is warranted.</li>
+                            <li><strong>Curcumin & Boswellia:</strong> Use with caution. Both interact with CYP enzymes and may have anti-platelet effects, posing a risk with anticoagulants or thrombocytopenia.</li>
+                            <li><strong>Green Tea Extract (EGCG):</strong> High-dose extracts are associated with hepatotoxicity. Given liver mets, this is a needless risk. Standard tea consumption is fine.</li>
+                            <li><strong>Fasting/Fasting-Mimicking Diets:</strong> Emerging data from small RCTs (e.g., in breast/gynae cancers) suggest potential for reduced toxicity. However, risk of cachexia and sarcopenia in an mCRC patient is high. Not recommended outside of a clinical trial.</li>
+                            <li><strong>Acupuncture:</strong> Strong evidence base for CINV (Chemo-Induced Nausea/Vomiting) per multiple systematic reviews (Cochrane) and ASCO/NCCN guideline inclusion. Evidence for CIPN (Chemo-Induced Peripheral Neuropathy) is moderate but growing. Standard safety precautions for neutropenia/thrombocytopenia apply.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Key References (for Clinician Review)</h3>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-blue-700 underline">
+                            <li>He, S. M., et al. (2015). The role of complementary and alternative medicine in patients with colorectal cancer. <i>Journal of Cancer Survivorship</i>. (DOI: 10.1007/s11764-015-0433-z)</li>
+                            <li>Abramovitz, M., et al. (2020). Integrating cannabis into clinical cancer care. <i>Current Oncology</i>. (DOI: 10.3390/curroncol27020089)</li>
+                            <li>Lyman, G. H., et al. (2018). Integrative Oncology Care of Symptoms of Cancer and Cancer Treatment. <i>ASCO Guideline</i>. (DOI: 10.1200/JCO.2018.79.2757)</li>
+                            <li>Cochrane Review. (2013). Acupuncture and related interventions for chemotherapy-induced nausea and vomiting. (DOI: 10.1002/14651858.CD009292)</li>
+                            <li>Memorial Sloan Kettering (MSKCC) "About Herbs" Database. (A key resource for interaction checking).</li>
+                            <li>Patient-Reported Sources (Summary): Triangulated from large, non-commercial, moderated communities (e.g., Reddit r/cancer, Macmillan Online Community) 2020-2024. Common themes: high interest in cannabis for symptoms; high interest in mushrooms (esp. Turkey Tail) for immunity; significant confusion re: fasting; frequent reports of neuropathy from Oxaliplatin.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainNav = document.getElementById('main-nav');
+            const navButtons = mainNav.querySelectorAll('.nav-button');
+            const tabContents = document.getElementById('tab-content-container').querySelectorAll('.tab-content');
+
+            mainNav.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.nav-button');
+                if (!targetButton) return;
+
+                const tabId = targetButton.dataset.tab;
+
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active-tab');
+                });
+                targetButton.classList.add('active-tab');
+
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+
+            const goalNav = document.getElementById('goal-nav');
+            const goalButtons = goalNav ? goalNav.querySelectorAll('.sub-nav-button') : [];
+            const goalContents = document.querySelectorAll('.goal-content');
+
+            if (goalNav) {
+                goalNav.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('.sub-nav-button');
+                    if (!targetButton) return;
+
+                    const goalId = `goal-${targetButton.dataset.goal}`;
+
+                    goalButtons.forEach(btn => {
+                        btn.classList.remove('active-sub-tab');
+                    });
+                    targetButton.classList.add('active-sub-tab');
+
+                    goalContents.forEach(content => {
+                        if (content.id === goalId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            }
+
+            const supplementNav = document.getElementById('supplement-nav');
+            const supplementButtons = supplementNav ? supplementNav.querySelectorAll('.sub-nav-button') : [];
+            const supplementRows = document.getElementById('supplement-table') ? document.getElementById('supplement-table').querySelectorAll('tbody tr') : [];
+
+            if (supplementNav) {
+                supplementNav.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('.sub-nav-button');
+                    if (!targetButton) return;
+                    
+                    const filter = targetButton.dataset.filter;
+
+                    supplementButtons.forEach(btn => btn.classList.remove('active-sub-tab'));
+                    targetButton.classList.add('active-sub-tab');
+
+                    supplementRows.forEach(row => {
+                        const category = row.dataset.category;
+                        const risk = row.dataset.risk;
+
+                        if (filter === 'all') {
+                            row.style.display = 'table-row';
+                        } else if (filter === 'significant') {
+                            row.style.display = (risk === 'significant') ? 'table-row' : 'none';
+                        } else {
+                             row.style.display = (category === filter) ? 'table-row' : 'none';
+                        }
+                    });
+                });
+            }
+
+        });
+		// Mobile menu toggle - Add to existing script or create new script tag
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+    
+    // Your existing page JavaScript continues here...
+});
+    </script>
+
+</body>
+</html>

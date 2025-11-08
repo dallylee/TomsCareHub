@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Support - Tom's Care Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFAF0;
+            color: #334155;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            color: #1e40af;
+            font-weight: 700;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+        .tab-button.active {
+            border-bottom-color: #059669;
+            color: #065f46;
+            font-weight: 700;
+        }
+        .tab-button:hover:not(.active) {
+            background-color: #ecfdf5;
+            border-bottom-color: #d1fae5;
+        }
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .support-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #10b981;
+        }
+        .support-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .action-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .action-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #059669;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <img src="assets/tomslogo.png" alt="Tom's Care Hub Logo" class="h-10 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <h1 class="text-2xl font-bold text-teal-700" style="display:none;">Tom's Care Hub</h1>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Home</a>
+                    <a href="chemo.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Chemo</a>
+                    <a href="nutrition.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Nutrition</a>
+                    <a href="mindfulness.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Mindfulness</a>
+                    <a href="research.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Research</a>
+                    <a href="Alternative.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Alternative</a>
+                    <a href="resources.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Resources</a>
+                    <a href="financial-support.html" class="nav-link active px-3 py-2">Financial Support</a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500 p-2">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <a href="index.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Home</a>
+            <a href="chemo.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Chemo</a>
+            <a href="nutrition.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Nutrition</a>
+            <a href="mindfulness.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Mindfulness</a>
+            <a href="research.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Research</a>
+            <a href="Alternative.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Alternative</a>
+            <a href="resources.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Resources</a>
+            <a href="financial-support.html" class="block px-4 py-3 text-gray-900 font-semibold hover:bg-gray-50">Financial Support</a>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        
+        <header class="text-center my-6 md:my-10">
+            <h1 class="text-3xl md:text-5xl font-bold text-green-800">Financial Support Guide</h1>
+            <p class="text-lg md:text-xl text-slate-600 mt-2">Practical help to secure your income and reduce costs</p>
+        </header>
+
+        <nav class="sticky top-16 z-10 bg-white/80 backdrop-blur-md shadow-sm rounded-lg mb-8">
+            <div class="flex flex-wrap justify-center border-b border-slate-200">
+                <button data-tab="overview" class="tab-button active flex-1 py-3 px-1 text-xs sm:text-base font-medium text-slate-600">
+                    Start Here
+                </button>
+                <button data-tab="income" class="tab-button flex-1 py-3 px-1 text-xs sm:text-base font-medium text-slate-600">
+                    Income Support
+                </button>
+                <button data-tab="benefits" class="tab-button flex-1 py-3 px-1 text-xs sm:text-base font-medium text-slate-600">
+                    Benefits
+                </button>
+                <button data-tab="healthcare" class="tab-button flex-1 py-3 px-1 text-xs sm:text-base font-medium text-slate-600">
+                    Healthcare Costs
+                </button>
+                <button data-tab="household" class="tab-button flex-1 py-3 px-1 text-xs sm:text-base font-medium text-slate-600">
+                    Household Bills
+                </button>
+                <button data-tab="action-plan" class="tab-button flex-1 py-3 px-1 text-xs sm:text-base font-medium text-slate-600">
+                    Action Plan
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Overview Section -->
+            <section data-content="overview" class="content-section active">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-green-700 mb-4">Quick Overview</h2>
+                    <div class="space-y-4 text-base sm:text-lg text-slate-700">
+                        <p>For someone who has actually paid into the system his whole life, this guide walks you through the support you're entitled to, from sick pay and benefits to help with treatment costs.</p>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200 mt-6">
+                            <h3 class="font-bold text-green-800 mb-2">Key Points to Remember:</h3>
+                            <ul class="space-y-2">
+                                <li>• Cancer is treated as a disability from diagnosis day under the Equality Act</li>
+                                <li>• You can claim multiple benefits - they often work together</li>
+                                <li>• Act quickly - some benefits can't be backdated</li>
+                                <li>• Keep copies of everything you submit</li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="font-bold text-slate-800 mb-3">Priority Actions This Week:</h3>
+                            <ol class="space-y-2">
+                                <li>1. Get a fit note from your GP or consultant</li>
+                                <li>2. Start your PIP claim (it's not means-tested)</li>
+                                <li>3. Check what sick pay you're entitled to</li>
+                                <li>4. Apply for a medical exemption certificate for free prescriptions</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Income Support Section -->
+            <section data-content="income" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-green-700 mb-6">1. Sort Your Immediate Income from Work</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Statutory Sick Pay -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">A. Statutory Sick Pay (SSP)</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Tell your employer you're not fit for work and provide a fit note from your GP or consultant.</p>
+                                <div class="bg-white p-4 rounded border border-gray-200">
+                                    <p class="font-semibold mb-2">Current SSP Rate (April 2025):</p>
+                                    <p class="text-2xl font-bold text-green-600">£118.75 per week</p>
+                                    <p class="text-sm text-gray-600 mt-1">Paid for up to 28 weeks</p>
+                                </div>
+                                <div class="space-y-2 mt-4">
+                                    <p class="font-semibold">Important Actions:</p>
+                                    <ul class="space-y-1 ml-4">
+                                        <li>• Get fit notes: <a href="https://www.nhs.uk/common-health-questions/caring-carers-and-long-term-conditions/when-do-i-need-a-fit-note/" target="_blank" class="text-blue-600 hover:underline">NHS fit notes guidance</a></li>
+                                        <li>• Check eligibility: <a href="https://www.gov.uk/statutory-sick-pay" target="_blank" class="text-blue-600 hover:underline">Statutory Sick Pay on GOV.UK</a></li>
+                                        <li>• If SSP is ending, ask for form SSP1 from your employer</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rights at Work -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">B. Your Rights at Work</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <div class="bg-amber-50 p-3 rounded border border-amber-200">
+                                    <p class="font-semibold text-amber-800">Important: Cancer = Disability Protection</p>
+                                    <p class="text-sm mt-1">From diagnosis day, you're protected under the Equality Act. Employers must consider reasonable adjustments.</p>
+                                </div>
+                                <p>Examples of reasonable adjustments:</p>
+                                <ul class="space-y-1 ml-4">
+                                    <li>• Flexible working hours</li>
+                                    <li>• Time off for treatment</li>
+                                    <li>• Working from home options</li>
+                                    <li>• Phased return to work</li>
+                                </ul>
+                                <div class="mt-3">
+                                    <p class="font-semibold">Helpful Resources:</p>
+                                    <ul class="space-y-1">
+                                        <li>• <a href="https://www.acas.org.uk/reasonable-adjustments" target="_blank" class="text-blue-600 hover:underline">Acas: Reasonable adjustments guide</a></li>
+                                        <li>• <a href="https://www.cancerresearchuk.org/about-cancer/coping/practically/work-cancer/your-rights-work" target="_blank" class="text-blue-600 hover:underline">Cancer Research UK: Equality Act explainer</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Benefits Section -->
+            <section data-content="benefits" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-green-700 mb-6">Benefits You Can Claim</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- PIP -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">2. Personal Independence Payment (PIP)</h3>
+                            <div class="bg-green-50 p-3 rounded border border-green-200 mb-4">
+                                <p class="font-semibold text-green-800">Not means-tested - claim whether working or not!</p>
+                            </div>
+                            <div class="space-y-3 text-slate-700">
+                                <p>For extra daily living and mobility needs. Can be paid alongside SSP or Universal Credit.</p>
+                                <div class="bg-white p-4 rounded border border-gray-200">
+                                    <p class="font-semibold mb-2">Weekly Rates:</p>
+                                    <p>Daily Living: <strong>£72.65 - £108.55</strong></p>
+                                    <p>Mobility: <strong>£28.70 - £75.75</strong></p>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="https://www.gov.uk/pip/how-to-claim" target="_blank" class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                                        Start PIP Claim →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- New Style ESA -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">3. New Style Employment and Support Allowance</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Contribution-based benefit that protects your National Insurance record. May pay once SSP ends.</p>
+                                <div class="bg-amber-50 p-3 rounded border border-amber-200">
+                                    <p class="text-sm">💡 <strong>Tip:</strong> Apply up to 3 months before SSP ends using form SSP1</p>
+                                </div>
+                                <ul class="space-y-1 ml-4 mt-3">
+                                    <li>• Cannot be paid while receiving SSP</li>
+                                    <li>• Need ongoing fit notes</li>
+                                    <li>• Will receive ESA50 form to complete</li>
+                                </ul>
+                                <div class="mt-3">
+                                    <a href="https://www.gov.uk/guidance/new-style-employment-and-support-allowance" target="_blank" class="text-blue-600 hover:underline">
+                                        How to claim New Style ESA →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Universal Credit -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">4. Universal Credit</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Means-tested benefit paid monthly. Can top up household income if it drops.</p>
+                                <div class="bg-white p-4 rounded border border-gray-200">
+                                    <p class="font-semibold mb-2">LCWRA Element (2025-26):</p>
+                                    <p class="text-2xl font-bold text-green-600">£423.27 per month</p>
+                                    <p class="text-sm text-red-600 mt-2">⚠️ Important: Get LCWRA before April 2026 to keep higher rate</p>
+                                </div>
+                                <div class="mt-4 space-y-2">
+                                    <a href="https://www.gov.uk/apply-universal-credit" target="_blank" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                                        Start UC Claim →
+                                    </a>
+                                    <p class="text-sm text-gray-600">Need money while waiting? Request a UC advance through your account</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Carer's Allowance -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">8. If Someone Cares for You</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>A partner, relative, or friend providing regular care may claim:</p>
+                                <ul class="space-y-2 ml-4">
+                                    <li>• <strong>Carer's Allowance:</strong> £81.90 per week</li>
+                                    <li>• <strong>UC Carer Element:</strong> £201.68 per month</li>
+                                </ul>
+                                <div class="mt-3">
+                                    <a href="https://www.gov.uk/carers-allowance" target="_blank" class="text-blue-600 hover:underline">
+                                        Claim Carer's Allowance →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Healthcare Costs Section -->
+            <section data-content="healthcare" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-green-700 mb-6">5. Help with Health Costs and Travel</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Free Prescriptions -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Free NHS Prescriptions</h3>
+                            <div class="bg-green-50 p-3 rounded border border-green-200 mb-3">
+                                <p class="font-semibold text-green-800">FREE in England for cancer treatment!</p>
+                            </div>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Covers treatment for cancer, effects of cancer, or effects of cancer treatment.</p>
+                                <div class="action-item">
+                                    <p>Ask your GP or oncology team for <strong>form FP92A</strong></p>
+                                </div>
+                                <div class="action-item">
+                                    <p>Medical Exemption Certificate arrives within ~10 days</p>
+                                </div>
+                                <div class="mt-3">
+                                    <ul class="space-y-1">
+                                        <li>• <a href="https://www.nhsbsa.nhs.uk/exemption-certificates/medical-exemption-certificates" target="_blank" class="text-blue-600 hover:underline">NHSBSA medical exemptions</a></li>
+                                        <li>• <a href="https://www.cancerresearchuk.org/about-cancer/coping/practically/free-prescriptions" target="_blank" class="text-blue-600 hover:underline">Cancer Research UK: Free prescriptions guide</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hospital Travel -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Hospital Travel Costs</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Healthcare Travel Costs Scheme (HTCS) can refund travel if you get certain benefits or have low income.</p>
+                                <div class="bg-amber-50 p-3 rounded border border-amber-200">
+                                    <p class="text-sm">⏰ <strong>Time limit:</strong> Claims must be made within 3 months</p>
+                                </div>
+                                <div class="mt-3">
+                                    <p class="font-semibold mb-2">How to claim:</p>
+                                    <ul class="space-y-1 ml-4">
+                                        <li>• At hospital cashier's office</li>
+                                        <li>• By refund form HC5</li>
+                                        <li>• Keep all receipts and tickets</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-3">
+                                    <ul class="space-y-1">
+                                        <li>• <a href="https://www.nhs.uk/nhs-services/help-with-health-costs/healthcare-travel-costs-scheme-htcs/" target="_blank" class="text-blue-600 hover:underline">NHS HTCS information</a></li>
+                                        <li>• <a href="https://www.nhsbsa.nhs.uk/nhs-low-income-scheme" target="_blank" class="text-blue-600 hover:underline">NHS Low Income Scheme</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobility Support -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">6. Practical Mobility Support</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <div class="mb-4">
+                                    <h4 class="font-semibold mb-2">Blue Badge Parking</h4>
+                                    <p>If mobility is limited by treatment or disease</p>
+                                    <a href="https://www.gov.uk/apply-blue-badge" target="_blank" class="inline-block mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                                        Apply for Blue Badge →
+                                    </a>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">Access to Work Grant</h4>
+                                    <p>For equipment, support workers, taxi fares to stay in work</p>
+                                    <a href="https://www.gov.uk/access-to-work" target="_blank" class="text-blue-600 hover:underline">
+                                        Access to Work overview →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Household Bills Section -->
+            <section data-content="household" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-green-700 mb-6">7. Reduce Household Bills</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Council Tax -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Council Tax Reduction</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Apply if your income has dropped. Each council has its own scheme.</p>
+                                <div class="bg-amber-50 p-3 rounded border border-amber-200">
+                                    <p class="text-sm">⚠️ Apply early - councils can only backdate in limited situations</p>
+                                </div>
+                                <a href="https://www.gov.uk/apply-council-tax-reduction" target="_blank" class="inline-block mt-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                                    Apply for Council Tax Reduction →
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Housing Payments -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Discretionary Housing Payment</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>If you get housing element of UC but still can't meet rent after income drop.</p>
+                                <ul class="space-y-1 ml-4 mt-2">
+                                    <li>• Applied through your local council</li>
+                                    <li>• Can cover rent shortfalls</li>
+                                    <li>• Temporary additional support</li>
+                                </ul>
+                                <a href="https://www.gov.uk/government/publications/claiming-discretionary-housing-payments" target="_blank" class="text-blue-600 hover:underline mt-3 inline-block">
+                                    About DHPs and how to apply →
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Utility Support -->
+                        <div class="support-card bg-gray-50 p-5 rounded-lg">
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">Energy and Water Bills</h3>
+                            <div class="space-y-3 text-slate-700">
+                                <p>Many suppliers offer:</p>
+                                <ul class="space-y-1 ml-4">
+                                    <li>• Priority services register</li>
+                                    <li>• Payment breaks or reductions</li>
+                                    <li>• Special tariffs for vulnerable customers</li>
+                                </ul>
+                                <p class="mt-3 font-semibold">Contact your suppliers directly to discuss support options</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Plan Section -->
+            <section data-content="action-plan" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-green-700 mb-6">Clean Step-by-Step Action Plan</h2>
+                    
+                    <!-- This Week -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                            <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm mr-3">URGENT</span>
+                            This Week
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                <div class="action-item">
+                                    <p><strong>Get a fit note</strong> - Give to employer, keep a copy</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Confirm SSP</strong> - Check rate and end date with employer</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Start PIP claim</strong> - <a href="https://www.gov.uk/pip/how-to-claim" target="_blank" class="text-blue-600 hover:underline">Phone or apply online</a> to set claim date</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Request form FP92A</strong> - From GP/oncology for prescription exemption</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Few Days -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                            <span class="bg-amber-500 text-white px-3 py-1 rounded-full text-sm mr-3">SOON</span>
+                            Within Next Few Days
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                                <div class="action-item">
+                                    <p><strong>Open UC account</strong> if household income dropping - <a href="https://www.gov.uk/apply-universal-credit" target="_blank" class="text-blue-600 hover:underline">Start claim</a></p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Report health condition</strong> in UC journal, upload fit notes</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Apply for New Style ESA</strong> if SSP ends within 3 months</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Apply for Council Tax Reduction</strong> - Can't always backdate</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Prepare for hospital travel claims</strong> if low income</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- When Needed -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                            <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm mr-3">AS NEEDED</span>
+                            When Treatment Affects Daily Life
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <div class="action-item">
+                                    <p><strong>Apply for Blue Badge</strong> if walking/mobility affected</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Apply for Access to Work</strong> if staying in/returning to work</p>
+                                </div>
+                                <div class="action-item">
+                                    <p><strong>Discuss reasonable adjustments</strong> with employer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Checklist -->
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">📋 Evidence Checklist for Claims</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold mb-2">Medical Evidence:</h4>
+                                <ul class="space-y-1 text-sm">
+                                    <li>✓ Fit notes</li>
+                                    <li>✓ Clinic letters</li>
+                                    <li>✓ Treatment plans</li>
+                                    <li>✓ Scan/pathology reports</li>
+                                    <li>✓ Supporting letters from clinicians</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2">Employment Evidence:</h4>
+                                <ul class="space-y-1 text-sm">
+                                    <li>✓ Employer SSP details</li>
+                                    <li>✓ Form SSP1 (if applicable)</li>
+                                    <li>✓ Contract/pay slips</li>
+                                    <li>✓ P45/P60 documents</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-4 italic">Keep copies of everything you submit!</p>
+                    </div>
+
+                    <!-- Benefit Calculators -->
+                    <div class="mt-8 bg-green-50 p-6 rounded-lg border border-green-200">
+                        <h3 class="text-xl font-bold text-green-800 mb-4">9. Check What You're Entitled To</h3>
+                        <p class="mb-4">Use trusted benefit calculators before making decisions:</p>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <a href="https://www.gov.uk/benefits-calculators" target="_blank" class="bg-white p-3 rounded text-center hover:shadow-md transition">
+                                <div class="text-green-600 font-semibold">GOV.UK</div>
+                                <div class="text-sm text-gray-600">Official calculators</div>
+                            </a>
+                            <a href="https://benefits-calculator.turn2us.org.uk/" target="_blank" class="bg-white p-3 rounded text-center hover:shadow-md transition">
+                                <div class="text-green-600 font-semibold">Turn2us</div>
+                                <div class="text-sm text-gray-600">Comprehensive tool</div>
+                            </a>
+                            <a href="https://www.entitledto.co.uk/" target="_blank" class="bg-white p-3 rounded text-center hover:shadow-md transition">
+                                <div class="text-green-600 font-semibold">EntitledTo</div>
+                                <div class="text-sm text-gray-600">Detailed calculator</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Tab navigation
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Update active states
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show corresponding content
+                contentSections.forEach(section => {
+                    if (section.getAttribute('data-content') === targetTab) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Handle hash navigation
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const targetButton = document.querySelector(`.tab-button[data-tab="${hash}"]`);
+                if (targetButton) {
+                    targetButton.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<!-- Chosen Palette: Warm Neutral & Ocean Blue -->
+<!-- Application Structure Plan: A 5-tab SPA. 'Start Here' provides immediate, actionable content (welcome, 15-min routine). 'Core Practices' is a "how-to" library. 'In-the-Moment' is a task-oriented toolkit for acute stress (scans, sleep) using an accordion. 'Evidence & Resources' holds the science and links. 'For Your Team' isolates clinical info. This structure guides the user from immediate need to deeper practice. -->
+<!-- Visualization & Content Choices: 1. Goal-based Table (Report Info) -> Goal: Map practices to symptoms -> Presentation: HTML Table -> Interaction: JS filter buttons (by anxiety, sleep, etc.) -> Justification: Makes a dense table scannable and user-centric. 2. Mini-Modules (Report Info) -> Goal: Provide acute symptom help -> Presentation: HTML Accordion -> Interaction: JS toggle (show/hide) -> Justification: Hides complexity, presents one "drill" at a time. 3. Quick-Start Routine (Report Info) -> Goal: Actionable first step -> Presentation: Styled HTML/Tailwind card -> Interaction: None (static) -> Justification: Creates a "screenshot-able" asset. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-M">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finding Calm and Strength: Mindfulness for Cancer Treatment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfb;
+            color: #292524;
+        }
+        .nav-button {
+            padding: 0.75rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .nav-button.active-tab {
+            background-color: #1e3a8a; 
+            color: #ffffff;
+        }
+        .nav-button:not(.active-tab) {
+            background-color: #e7e5e4; 
+            color: #44403c;
+        }
+        .nav-button:not(.active-tab):hover {
+            background-color: #d6d3d1;
+        }
+        
+        .sub-nav-button {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #93c5fd;
+            cursor: pointer;
+        }
+        .sub-nav-button.active-sub-tab {
+            background-color: #93c5fd; 
+            color: #1e3a8a;
+        }
+        .sub-nav-button:not(.active-sub-tab) {
+            background-color: #eff6ff; 
+            color: #1e40af;
+        }
+        .sub-nav-button:not(.active-sub-tab):hover {
+            background-color: #dbeafe;
+        }
+
+        .accordion-toggle {
+            width: 100%;
+            background-color: #eef2ff;
+            color: #1e3a8a;
+            padding: 1rem 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: left;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-toggle:hover {
+            background-color: #e0e7ff;
+        }
+        .accordion-toggle.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .accordion-toggle::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            transition: transform 0.2s;
+        }
+        .accordion-toggle.open::after {
+            transform: rotate(45deg);
+        }
+        .accordion-content {
+            display: none;
+            padding: 1.5rem;
+            border: 1px solid #e0e7ff;
+            border-top: 0;
+            background-color: #fff;
+            border-radius: 0 0 0.375rem 0.375rem;
+        }
+
+        .evidence-high { background-color: #dcfce7; color: #166534; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
+        .evidence-moderate { background-color: #fef9c3; color: #854d0e; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
+        .evidence-low { background-color: #fee2e2; color: #991b1b; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
+    </style>
+</head>
+<body class="bg-stone-50">
+<!-- Add this right after the opening <body> tag in each file -->
+<!-- Navigation Header - Add this right after <body> tag -->
+<nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a href="index.html" class="flex items-center">
+                    <img src="assets/tomslogo.png" alt="Tom's Care Hub Logo" class="h-10 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <h1 class="text-2xl font-bold text-teal-700" style="display:none;">Tom's Care Hub</h1>
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Home</a>
+                <a href="chemo.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Chemo</a>
+                <a href="nutrition.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Nutrition</a>
+                <a href="mindfulness.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Mindfulness</a>
+                <a href="research.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Research</a>
+                <a href="Alternative.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Alternative</a>
+                <a href="resources.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Resources</a>
+                <a href="financial-support.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Financial Support</a>
+            </div>
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500 p-2">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <a href="index.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Home</a>
+        <a href="chemo.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Chemo</a>
+        <a href="nutrition.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Nutrition</a>
+        <a href="mindfulness.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Mindfulness</a>
+        <a href="research.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Research</a>
+        <a href="Alternative.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Alternative</a>
+        <a href="resources.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Resources</a>
+        <a href="financial-support.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Financial Support</a>
+    </div>
+</nav>
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <header class="mb-6 border-b border-stone-200 pb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-2">Finding Calm and Strength</h1>
+            <p class="text-xl text-stone-700">A practical guide to mindfulness and emotional steadiness during your cancer treatment.</p>
+        </header>
+
+        <nav id="main-nav" class="flex flex-wrap border-b border-stone-300 mb-6">
+            <button class="nav-button active-tab" data-tab="start">Start Here</button>
+            <button class="nav-button" data-tab="practices">Core Practices</button>
+            <button class="nav-button" data-tab="toolkit">In-the-Moment Help</button>
+            <button class="nav-button" data-tab="evidence">Evidence & Resources</button>
+            <button class="nav-button" data-tab="team">For Your Team</button>
+        </nav>
+
+        <main id="tab-content-container">
+
+            <!-- === TAB 1: START HERE === -->
+            <section id="start" class="tab-content">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">Ommmmmm</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 mb-6">
+                    <p class="text-lg text-stone-700 mb-4">Hey Boss, I can imagine this is a lot to deal with, but you are not alone and there’s many who would be more than willing to help (if you let us, and stop giving us evils!!)</p>
+                    <p class="text-lg text-stone-700 mb-4">This guide is about giving you some simple, practical tools to help find a bit of steadiness in the middle of it all. It’s just some science-based practical advice about helping you manage the anxiety, improve your sleep, and handle the day-to-day stresses of treatment, so you can feel more in control.</p>
+                    <p class="text-lg text-stone-700">With focus on small, science-backed steps you can take.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-blue-800 mb-3">What is Mindfulness (and what it isn't)</h3>
+                        <p class="mb-4">Mindfulness is simply paying attention to the present moment, on purpose, without judging it.</p>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li>It <span class="font-semibold">IS</span> noticing your breath.</li>
+                            <li>It <span class="font-semibold">IS</span> noticing the feeling of your feet on the floor.</li>
+                            <li>It <span class="font-semibold">IS</span> noticing a worried thought, seeing it ("Ah, there's that worry again"), and letting it go by, like a cloud.</li>
+                        </ul>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>It <span class="font-semibold">IS NOT</span> about "clearing your mind" or "stopping thoughts." (That's impossible!)</li>
+                            <li>It <span class="font-semibold">IS NOT</span> a religion.</li>
+                            <li>It <span class="font-semibold">IS NOT</span> a competition. There is no "failing" at mindfulness.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-blue-800 mb-3">Why Your Mind Matters for Treatment</h3>
+                        <p class="mb-4">Your mind and body are constantly talking to each other. When you're under high stress, your body produces more "stress hormones" like cortisol. This can:</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Disrupt your sleep.</li>
+                            <li>Make you feel more fatigued.</li>
+                            <li>Increase your perception of pain.</li>
+                            <li>Worsen feelings of nausea.</li>
+                        </ul>
+                        <p class="mt-4">By using these simple techniques to calm your nervous system, you can help dial down that stress response. This can make a real, physical difference to your quality of life, helping you sleep better and tolerate treatment more easily.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-blue-50 p-6 rounded-lg border-2 border-blue-200" id="quick-start-routine">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-4">Your 15-Minute 'Steadiness' Routine (A Quick-Start Guide)</h3>
+                    <p class="text-lg text-stone-700 mb-6">If you do nothing else, try this. It's a simple, 15-minute plan. You can screenshot this or just remember the 3 simple parts.</p>
+                    <div class="grid sm:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="text-xl font-semibold text-blue-800 mb-2">â˜€ï¸ Morning (5 Mins)</h4>
+                            <p class="font-semibold">Anchor Your Day</p>
+                            <p>Before getting out of bed, just sit. Do a 5-minute "Body Scan" (see 'Core Practices' tab) or simply count 10 slow breaths. Notice the day starting. Set an intention: "Today, I'll be kind to myself."</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="text-xl font-semibold text-blue-800 mb-2">ðŸš¶ Midday (5 Mins)</h4>
+                            <p class="font-semibold">Move Mindfully</p>
+                            <p>Get up from your chair. Do 5 minutes of gentle stretching. Or, walk to the kitchen to get water, and just pay attention to your feet on the floor. No phone. Just 5 minutes of mindful movement.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="text-xl font-semibold text-blue-800 mb-2">ðŸŒ™ Evening (5 Mins)</h4>
+                            <p class="font-semibold">Wind Down</p>
+                            <p>Before sleep, sit and do 5 minutes of "Box Breathing" (see 'Core Practices' tab). Then, think of *one* small thing you're grateful for (a cup of tea, a text from a friend). Write it down if you like.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <blockquote class="mt-6 text-center text-xl italic text-stone-600 p-4 border-t border-b border-stone-200">
+                    "The best way to capture moments is to pay attention. This is how we cultivate mindfulness."
+                </blockquote>
+
+            </section>
+
+            <!-- === TAB 2: CORE PRACTICES === -->
+            <section id="practices" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">Your Core Practices Toolkit</h2>
+                <p class="text-lg text-stone-700 mb-6">These are the foundational techniques. Don't try to master them. Just try them. Five minutes is a perfect start.</p>
+                
+                <nav id="practice-nav" class="flex flex-wrap mb-4">
+                    <button class="sub-nav-button active-sub-tab" data-practice="breathing">Breathing</button>
+                    <button class="sub-nav-button" data-practice="body-scan">Body Scan</button>
+                    <button class="sub-nav-button" data-practice="movement">Mindful Movement</button>
+                    <button class="sub-nav-button" data-practice="gratitude">Gratitude & Journalling</button>
+                </nav>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <!-- Practice: Breathing -->
+                    <div id="practice-breathing" class="practice-content space-y-4">
+                        <h3 class="text-2xl font-semibold text-blue-900">Practice: Controlled Breathing</h3>
+                        <p>This is your "emergency brake" for anxiety. It directly stimulates the vagus nerve, telling your body it's safe to relax.</p>
+                        <h4 class="text-lg font-semibold">How to do "Box Breathing":</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Sit comfortably in a chair, feet on the floor.</li>
+                            <li>Slowly exhale all the air from your lungs.</li>
+                            <li>Gently inhale through your nose for a count of <strong>4</strong>.</li>
+                            <li>Hold the breath gently for a count of <strong>4</strong>.</li>
+                            <li>Slowly exhale through your mouth for a count of <strong>4</strong>.</li>
+                            <li>Hold the empty breath for a count of <strong>4</strong>.</li>
+                            <li>Repeat 5-10 times.</li>
+                        </ol>
+                        <p class="font-semibold mt-4">Tip:</p>
+                        <p>If holding the breath feels stressful, just focus on a long, slow exhale. Try inhaling for 4 and exhaling for 6. The slow exhale is the most important part for relaxation.</p>
+                    </div>
+
+                    <!-- Practice: Body Scan -->
+                    <div id="practice-body-scan" class="practice-content hidden space-y-4">
+                        <h3 class="text-2xl font-semibold text-blue-900">Practice: The Body Scan</h3>
+                        <p>This practice helps you reconnect with your body and notice tension you might be holding. It's excellent for doing in bed before sleep.</p>
+                        <h4 class="text-lg font-semibold">How to do a 5-Minute Body Scan:</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Lie down or sit comfortably. Close your eyes.</li>
+                            <li>Bring your attention to your feet. Just notice them. Are they warm? Cold? Tingly? No need to change anything, just notice.</li>
+                            <li>Slowly move your attention up to your lower legs. Then your knees. Then your thighs. Spend 15-20 seconds on each part.</li>
+                            <li>Move your attention to your stomach, your lower back, your chest.</li>
+                            <li>Move it to your hands. Your arms. Your shoulders. (This is a common place to hold tension - just notice it, and on an exhale, imagine it softening).</li>
+                            <li>Finally, bring your attention to your neck, your jaw, and your face. Soften your forehead.</li>
+                        </ol>
+                        <p class="font-semibold mt-4">Tip:</p>
+                        <p>Your mind *will* wander. That's what minds do. When you notice it's wandered off, just gently and kindly bring your attention back to the part of the body you were on. It's not a failure, it's part of the practice.</p>
+                    </div>
+
+                    <!-- Practice: Mindful Movement -->
+                    <div id="practice-movement" class="practice-content hidden space-y-4">
+                        <h3 class="text-2xl font-semibold text-blue-900">Practice: Mindful Movement (Gentle Yoga)</h3>
+                        <p>Fatigue can make exercise feel impossible, but gentle movement can actually *give* you energy. This is about listening to your body, not pushing it.</p>
+                        <h4 class="text-lg font-semibold">How to do a "Chair Cat-Cow":</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Sit in a chair with your feet flat on the floor and your hands on your knees.</li>
+                            <li><strong>Inhale:</strong> Gently arch your back, look up slightly, and roll your shoulders back. (This is "cow").</li>
+                            <li><strong>Exhale:</strong> Slowly round your spine, tuck your chin to your chest, and let your shoulders come forward. (This is "cat").</li>
+                            <li>Move slowly with your breath. Repeat 5-8 times.</li>
+                        </ol>
+                        <h4 class="text-lg font-semibold mt-4">How to do a "Mindful Walk":</h4>
+                        <p>Just walk, even if it's just to the end of your street. Leave your phone in your pocket. Pay attention:</p>
+                        <ul class="list-disc list-inside ml-4">
+                            <li>Notice the feeling of your feet hitting the pavement.</li>
+                            <li>Notice the feeling of the air on your skin.</li>
+                            <li>Notice 3 things you can see, and 3 things you can hear.</li>
+                        </ul>
+                        <p class="font-semibold mt-4 text-rose-700">Safety Note:</p>
+                        <p>Listen to your body. If you feel dizzy or sharp pain, stop. Be extra gentle around any port lines or surgical sites. "Gentle" is the key word.</p>
+                    </div>
+
+                    <!-- Practice: Gratitude -->
+                    <div id="practice-gratitude" class="practice-content hidden space-y-4">
+                        <h3 class="text-2xl font-semibold text-blue-900">Practice: Gratitude & Journalling</h3>
+                        <p>This isn't about pretending everything is fine. It's about training your brain to notice the small, good things that still happen, even on hard days. This can shift your mood and perspective.</p>
+                        <h4 class="text-lg font-semibold">How to do it:</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>The 3 Good Things:</strong> Before sleep, get a notebook. Write down three small, good things that happened. They can be tiny: "The tea tasted good this morning." "A friend sent a funny text." "I saw a dog out the window."</li>
+                            <li><strong>Expressive Writing:</strong> If you feel overwhelmed, try "dumping" your thoughts onto a page for 10 minutes. Don't worry about grammar or spelling. Just write whatever is in your head. Afterwards, you can even tear the page up. It's just a way to get the thoughts *out* of your head.</li>
+                        </ul>
+                        <p class="font-semibold mt-4">Tip:</p>
+                        <p>This can feel silly at first. Stick with it for three days. You might be surprised at what you start to notice.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 3: IN-THE-MOMENT HELP === -->
+            <section id="toolkit" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">In-the-Moment Help (Your Toolkit)</h2>
+                <p class="text-lg text-stone-700 mb-6">These are specific "drills" for high-stress moments. Click on a topic to see a simple plan.</p>
+                
+                <div class="space-y-4" id="accordion-container">
+                    <div class="accordion-item">
+                        <button class="accordion-toggle">When Your Thoughts are Spiralling</button>
+                        <div class="accordion-content space-y-3">
+                            <h4 class="text-lg font-semibold">Use the "5-4-3-2-1" Grounding Technique</h4>
+                            <p>This pulls your mind out of the future (worry) and into the present (safety). Right now, where you are, pause and name:</p>
+                            <ul class="list-disc list-inside space-y-1 ml-4">
+                                <li><strong>5</strong> things you can <strong>SEE</strong> (the computer, a crack in the ceiling, your hand).</li>
+                                <li><strong>4</strong> things you can <strong>FEEL</strong> (your feet on the floor, the chair under you, your shirt).</li>
+                                <li><strong>3</strong> things you can <strong>HEAR</strong> (the fridge humming, a car outside, your own breath).</li>
+                                <li><strong>2</strong> things you can <strong>SMELL</strong> (soap on your hands, coffee).</li>
+                                <li><strong>1</strong> thing you can <strong>TASTE</strong> (or just the inside of your mouth).</li>
+                            </ul>
+                            <p>Take a deep breath. You are here, right now.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-toggle">Handling "Scan-xiety" (Waiting for Scans/Results)</button>
+                        <div class="accordion-content space-y-3">
+                            <h4 class="text-lg font-semibold">Acknowledge, Anchor, Act</h4>
+                            <ol class="list-decimal list-inside space-y-2 ml-4">
+                                <li><strong>Acknowledge:</strong> Say to yourself, "I am feeling anxious. That makes sense." Don't fight the feeling. Just name it.</li>
+                                <li><strong>Anchor:</strong> Do 10 "Box Breaths" or "4-6 Breaths." Place a hand on your chest or stomach and feel it rise and fall. Anchor yourself in your body.</li>
+                                <li><strong>Act:</strong> Do a simple, distracting *task*. Don't just watch TV. Tidy a drawer. Do a puzzle. Listen to a specific album. Engage your mind in a simple, concrete task.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-toggle">On a Chemo Day (In the Chair)</button>
+                        <div class="accordion-content space-y-3">
+                            <h4 class="text-lg font-semibold">Create a "Calm Bubble"</h4>
+                            <p>The chemo ward can be busy. You're allowed to create your own quiet space.</p>
+                            <ul class="list-disc list-inside space-y-1 ml-4">
+                                <li><strong>Headphones are key:</strong> Prepare a playlist of calming music, an audiobook, or guided meditations (see 'Resources' tab).</li>
+                                <li><strong>Comforts:</strong> Bring a soft blanket, warm socks, a flask of your favourite tea.</li>
+                                <li><strong>Focus:</strong> Instead of watching the drip, close your eyes and do a Body Scan. Or, practice "Mindful Eating" with the snack they give you. Pay 100% attention to the taste and texture.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-toggle">When You Can't Get Back to Sleep (3am thoughts)</button>
+                        <div class="accordion-content space-y-3">
+                            <h4 class="text-lg font-semibold">Don't Fight It. Get Up.</h4>
+                            <p>Lying in bed worrying about not sleeping is the worst thing you can do. It teaches your brain that "bed = stress."</p>
+                            <ol class="list-decimal list-inside space-y-2 ml-4">
+                                <li><strong>The 20-Minute Rule:</strong> If you're awake for more than 20 minutes, get out of bed.</li>
+                                <li><strong>Go to another room:</strong> Keep the lights dim.</li>
+                                <li><strong>Do something boring:</strong> Read a dull book (no phones!). Do a Body Scan. Listen to a boring podcast.</li>
+                                <li><strong>Return to bed:</strong> When you feel sleepy again, go back to bed.</li>
+                            </ol>
+                            <p>This is a core part of CBT-I (Cognitive Behavioural Therapy for Insomnia) and it works.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 4: EVIDENCE & RESOURCES === -->
+            <section id="evidence" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">The Science & Where to Go Next</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 mb-6">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-3">The Science Corner: Does this really work?</h3>
+                    <p class="mb-4">Yes. This isn't "alternative" medicine; it's now a standard part of supportive cancer care, recommended by Macmillan and the NHS. Large studies (meta-analyses) on mindfulness for cancer patients have shown:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Significant reductions</strong> in anxiety, depression, and stress (often 30-40% improvement in scores).</li>
+                        <li><strong>Improved sleep quality</strong> and less reliance on sleep medication.</li>
+                        <li><strong>Reductions in fatigue,</strong> which is one of the most common and difficult side effects.</li>
+                        <li><strong>Better pain tolerance</strong> and a lower "perception" of pain.</li>
+                        <li>It may even have a small, positive effect on immune markers and inflammation (by reducing stress hormones).</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-blue-800 mb-3">Practices for Your Goals</h3>
+                <p class="text-lg text-stone-700 mb-4">Hereâ€™s a quick guide to which practices have the best evidence for specific problems. Use the buttons to filter.</p>
+
+                <nav id="goal-filter-nav" class="flex flex-wrap mb-4">
+                    <button class="sub-nav-button active-sub-tab" data-filter="all">Show All</button>
+                    <button class="sub-nav-button" data-filter="anxiety">Anxiety</button>
+                    <button class="sub-nav-button" data-filter="sleep">Sleep</button>
+                    <button class="sub-nav-button" data-filter="fatigue">Fatigue</button>
+                    <button class="sub-nav-button" data-filter="pain">Pain</button>
+                </nav>
+
+                <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-stone-200 mb-6">
+                    <table class="w-full min-w-[700px]">
+                        <thead class="bg-stone-100 text-left text-stone-700">
+                            <tr>
+                                <th class="p-4">Practice</th>
+                                <th class="p-4">Evidence</th>
+                                <th class="p-4">Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody id="goal-table" class="divide-y divide-stone-200">
+                            <tr data-goal="anxiety fatigue sleep">
+                                <td class="p-4 font-semibold">Mindfulness (MBSR/MBCT)</td>
+                                <td class="p-4"><span class="evidence-high">High</span></td>
+                                <td class="p-4">Anxiety, Depression, Sleep, Quality of Life</td>
+                            </tr>
+                            <tr data-goal="anxiety">
+                                <td class="p-4 font-semibold">Controlled Breathing</td>
+                                <td class="p-4"><span class="evidence-moderate">Moderate</span></td>
+                                <td class="p-4">In-the-moment Anxiety, Anticipatory Nausea</td>
+                            </tr>
+                            <tr data-goal="fatigue pain">
+                                <td class="p-4 font-semibold">Gentle Yoga</td>
+                                <td class="p-4"><span class="evidence-high">High</span></td>
+                                <td class="p-4">Fatigue, Mood, Balance, Pain</td>
+                            </tr>
+                            <tr data-goal="fatigue">
+                                <td class="p-4 font-semibold">Tai Chi / Qigong</td>
+                                <td class="p-4"><span class="evidence-moderate">Moderate</span></td>
+                                <td class="p-4">Fatigue, Balance, Inflammation Markers</td>
+                            </tr>
+                            <tr data-goal="sleep">
+                                <td class="p-4 font-semibold">CBT-I Strategies</td>
+                                <td class="p-4"><span class="evidence-high">High</span></td>
+                                <td class="p-4">Insomnia (Sleep Onset & Maintenance)</td>
+                            </tr>
+                            <tr data-goal="sleep pain anxiety">
+                                <td class="p-4 font-semibold">Guided Imagery / Music</td>
+                                <td class="p-4"><span class="evidence-moderate">Moderate</span></td>
+                                <td class="p-4">Pain Perception, Pre-Scan Anxiety, Sleep</td>
+                            </tr>
+                            <tr data-goal="anxiety">
+                                <td class="p-4 font-semibold">Journalling / Gratitude</td>
+                                <td class="p-4"><span class="evidence-low">Low-Moderate</span></td>
+                                <td class="p-4">Mood, Reducing Rumination, Anxiety</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-3">Resources for Your Journey (UK)</h3>
+                    <ul class="list-disc list-inside space-y-3">
+                        <li><strong>NHS Mindfulness:</strong> Your GP can often refer you to free or low-cost online mindfulness (MBCT) courses.</li>
+                        <li><strong>Macmillan Cancer Support:</strong> Their website has a wealth of guided audio, videos, and resources. They also fund mindfulness sessions at many centres.</li>
+                        <li><strong>Maggie's Centres:</strong> These centres (often near big hospitals) are amazing. They offer free drop-in mindfulness, yoga, and psychological support. Look up your nearest one.</li>
+                        <li><strong>Apps (Free versions):</strong>
+                            <ul class="list-disc list-inside ml-6">
+                                <li><strong>Insight Timer:</strong> Huge library of free guided meditations.</li>
+                                <li><strong>Headspace & Calm:</strong> Have some free content. (Headspace sometimes partners with Macmillan for free subscriptions).</li>
+                            </ul>
+                        </li>
+                        <li><strong>Reliable Audio (Free):</strong> Search for "Oxford Mindfulness Centre" or "British Mindfulness Institute" for high-quality, free guided practices.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- === TAB 5: FOR YOUR TEAM === -->
+            <section id="team" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">For You & Your Clinical Team</h2>
+                <p class="text-lg text-stone-700 mb-6">This section has summaries you can share with your doctor, nurse, or psychologist.</p>
+                
+                <div class="bg-rose-50 p-6 rounded-lg border-2 border-rose-200 mb-6">
+                    <h3 class="text-2xl font-semibold text-rose-800 mb-3">When to Pause and Seek Help</h3>
+                    <p class="mb-4">These practices are very safe, but it's important to get professional help if you're struggling. This is not a replacement for psychological therapy.</p>
+                    <table class="w-full">
+                        <tbody class="divide-y divide-rose-200">
+                            <tr class="align-top">
+                                <td class="p-3 font-semibold w-1/3">If you feel:</td>
+                                <td class="p-3">Persistent low mood, lack of interest in anything, or feelings of hopelessness for more than a week.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="p-3 font-semibold">The right action is:</td>
+                                <td class="p-3">Talk to your GP or Clinical Nurse Specialist. This could be depression, and it's treatable.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="p-3 font-semibold">If you feel:</td>
+                                <td class="p-3">Overwhelming anxiety, panic attacks, or find that mindfulness makes you feel *more* anxious or agitated.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="p-3 font-semibold">The right action is:</td>
+                                <td class="p-3">Pause. Talk to your GP or ask for a referral to a hospital psychologist. You may need trauma-sensitive or one-on-one support.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="p-3 font-semibold">If you feel:</td>
+                                <td class="p-3">Any sharp pain, dizziness, or breathlessness during mindful movement or yoga.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="p-3 font-semibold">The right action is:</td>
+                                <td class="p-3">Stop immediately. Talk to your physiotherapist or team.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-800 mb-3">Clinician Appendix: Key Evidence</h3>
+                    <ul class="list-disc list-inside space-y-4 text-sm">
+                        <li>
+                            <strong>MBSR/MBCT for Cancer Patients (Meta-Analysis):</strong>
+                            A 2020 meta-analysis (Cillessen et al., <i>Psycho-Oncology</i>) of 29 RCTs found mindfulness-based interventions had significant positive effects on reducing anxiety, depression, and stress, and improving quality of life. Effects were largest for psychological distress. (DOI: 10.1002/pon.5430)
+                        </li>
+                        <li>
+                            <strong>Yoga for Cancer-Related Fatigue (Meta-Analysis):</strong>
+                            A 2018 review (Zeng et al., <i>Integrative Cancer Therapies</i>) of 13 RCTs found yoga significantly reduced cancer-related fatigue compared to control groups, with effects durable at follow-up. (DOI: 10.1177/1534735418758830)
+                        </li>
+                        <li>
+                            <strong>CBT-I for Insomnia in Cancer:</strong>
+                            CBT-I is considered the first-line treatment for chronic insomnia. In cancer populations, it shows robust effects on sleep onset, maintenance, and quality, and is recommended by NCCN and ASCO guidelines over pharmacology.</li>
+                        <li>
+                            <strong>Safety & Adherence:</strong>
+                            Adherence to 8-week programmes is moderate-to-high. Primary safety concern is in patients with severe, unmanaged PTSD, where mindfulness may require adaptation (trauma-informed approach). Physical movement (yoga) requires adaptation for port lines, neuropathy, and bone stability.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainNav = document.getElementById('main-nav');
+            const navButtons = mainNav.querySelectorAll('.nav-button');
+            const tabContents = document.getElementById('tab-content-container').querySelectorAll('.tab-content');
+
+            mainNav.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.nav-button');
+                if (!targetButton) return;
+
+                const tabId = targetButton.dataset.tab;
+
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active-tab');
+                });
+                targetButton.classList.add('active-tab');
+
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+
+            const practiceNav = document.getElementById('practice-nav');
+            const practiceButtons = practiceNav ? practiceNav.querySelectorAll('.sub-nav-button') : [];
+            const practiceContents = document.querySelectorAll('.practice-content');
+
+            if (practiceNav) {
+                practiceNav.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('.sub-nav-button');
+                    if (!targetButton) return;
+
+                    const practiceId = `practice-${targetButton.dataset.practice}`;
+
+                    practiceButtons.forEach(btn => {
+                        btn.classList.remove('active-sub-tab');
+                    });
+                    targetButton.classList.add('active-sub-tab');
+
+                    practiceContents.forEach(content => {
+                        if (content.id === practiceId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            }
+
+            const accordionContainer = document.getElementById('accordion-container');
+            if (accordionContainer) {
+                accordionContainer.addEventListener('click', (e) => {
+                    const toggle = e.target.closest('.accordion-toggle');
+                    if (!toggle) return;
+
+                    const content = toggle.nextElementSibling;
+                    const isOpen = toggle.classList.contains('open');
+
+                    if (isOpen) {
+                        toggle.classList.remove('open');
+                        content.style.display = 'none';
+                    } else {
+                        toggle.classList.add('open');
+                        content.style.display = 'block';
+                    }
+                });
+            }
+            
+            const goalFilterNav = document.getElementById('goal-filter-nav');
+            const goalFilterButtons = goalFilterNav ? goalFilterNav.querySelectorAll('.sub-nav-button') : [];
+            const goalTableRows = document.getElementById('goal-table') ? document.getElementById('goal-table').querySelectorAll('tbody tr') : [];
+
+            if (goalFilterNav) {
+                goalFilterNav.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('.sub-nav-button');
+                    if (!targetButton) return;
+                    
+                    const filter = targetButton.dataset.filter;
+
+                    goalFilterButtons.forEach(btn => btn.classList.remove('active-sub-tab'));
+                    targetButton.classList.add('active-sub-tab');
+
+                    goalTableRows.forEach(row => {
+                        const goals = row.dataset.goal;
+                        if (filter === 'all' || goals.includes(filter)) {
+                            row.style.display = 'table-row';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+        });
+		// Mobile menu toggle - Add to existing script or create new script tag
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+    
+    // Your existing page JavaScript continues here...
+});
+    </script>
+
+</body>
+</html>

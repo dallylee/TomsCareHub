@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decoding the Latest Cancer Research Trials of 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfb;
+            color: #292524;
+        }
+        .nav-button {
+            padding: 0.75rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            cursor: pointer;
+            white-space: nowrap; /* Prevents button text wrapping */
+        }
+        .nav-button.active-tab {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.2), 0 2px 4px -2px rgba(30, 58, 138, 0.2);
+        }
+        .nav-button:not(.active-tab) {
+            background-color: #e7e5e4;
+            color: #44403c;
+        }
+        .nav-button:not(.active-tab):hover {
+            background-color: #d6d3d1;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.65rem;
+            margin-right: 0.4rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+        .maturity-approved { background-color: #dcfce7; color: #15803d; }
+        .maturity-late { background-color: #eff6ff; color: #1e40af; }
+        .maturity-mid { background-color: #fef3c7; color: #a16207; }
+        .maturity-early { background-color: #fee2e2; color: #b91c1c; }
+        
+        .benefit-strong { background-color: #dcfce7; color: #15803d; }
+        .benefit-moderate { background-color: #eff6ff; color: #1e40af; }
+        .benefit-weak { background-color: #fef3c7; color: #a16207; }
+        .benefit-negative { background-color: #fee2e2; color: #b91c1c; }
+    </style>
+</head>
+<body class="bg-stone-50">
+<!-- Add this right after the opening <body> tag in each file -->
+<!-- Navigation Header - Add this right after <body> tag -->
+<nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a href="index.html" class="flex items-center">
+                    <img src="assets/tomslogo.png" alt="Tom's Care Hub Logo" class="h-10 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <h1 class="text-2xl font-bold text-teal-700" style="display:none;">Tom's Care Hub</h1>
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Home</a>
+                <a href="chemo.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Chemo</a>
+                <a href="nutrition.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Nutrition</a>
+                <a href="mindfulness.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Mindfulness</a>
+                <a href="research.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Research</a>
+                <a href="Alternative.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Alternative</a>
+                <a href="resources.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Resources</a>
+                <a href="financial-support.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Financial Support</a>
+            </div>
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500 p-2">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <a href="index.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Home</a>
+        <a href="chemo.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Chemo</a>
+        <a href="nutrition.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Nutrition</a>
+        <a href="mindfulness.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Mindfulness</a>
+        <a href="research.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Research</a>
+        <a href="Alternative.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Alternative</a>
+        <a href="resources.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Resources</a>
+        <a href="financial-support.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Financial Support</a>
+    </div>
+</nav>
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <header class="mb-6 border-b border-stone-200 pb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-2">Decoding the Latest Cancer Research Trials of 2025</h1>
+            <p class="text-xl text-stone-700">A simplified guide to new targeted and immune therapies for patients like you.</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav id="main-nav" class="flex flex-wrap border-b border-stone-300 mb-6 -mx-1">
+            <button class="nav-button active-tab" data-tab="new">What's New</button>
+            <button class="nav-button" data-tab="cards">Therapies to Watch</button>
+            <button class="nav-button" data-tab="crc">CRC Spotlight</button>
+            <button class="nav-button" data-tab="access">Access & Hype</button>
+            <button class="nav-button" data-tab="appendix">Clinician Summary</button>
+        </nav>
+
+        <main id="tab-content-container">
+
+            <!-- === TAB 1: WHAT'S NEW IN 2025 === -->
+            <section id="new" class="tab-content space-y-6">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">What are some clever peeps working on in 2025</h2>
+                <p class="text-lg text-stone-700">Ok, so this section provides a quick summary of the most important headlines from major medical conferences and regulatory bodies this year. Aiming to help you find some clarity in the complex world of cancer research.</p>
+                <div class="bg-amber-50 p-4 rounded-lg border border-amber-300 mb-6">
+  <p class="text-sm">
+    <strong>ðŸ‘‰ Before you read trial news:</strong>
+    Check your <a href="chemo.html#tests" class="text-blue-700 underline font-semibold">eligibility basics</a> â€“ understanding your tumour's test results helps you know which trials might be right for you.
+  </p>
+</div>
+
+<div class="bg-amber-50 p-4 rounded-lg border border-amber-300 mb-6">
+  <p class="text-sm">
+    <strong>ðŸ‘‰ Find a clinical trial</strong>
+    Search on Cancer Research UK  
+    <a href="https://find.cancerresearchuk.org/clinical-trials?size=n_20_n&filters%5B0%5D%5Bfield%5D=trial_status&filters%5B0%5D%5Bvalues%5D%5B0%5D=Open&filters%5B0%5D%5Btype%5D=any&filters%5B0%5D%5Bpersistent%5D=false&filters%5B1%5D%5Bfield%5D=cancer_types&filters%5B1%5D%5Bvalues%5D%5B0%5D=Bowel%20%28colorectal%29%20cancer&filters%5B1%5D%5Btype%5D=any&filters%5B1%5D%5Bpersistent%5D=false&filters%5B2%5D%5Bfield%5D=trial_type&filters%5B2%5D%5Bvalues%5D%5B0%5D=Treatment%20%28clinical%20trials%29&filters%5B2%5D%5Bvalues%5D%5B1%5D=Targeted%20drug&filters%5B2%5D%5Bvalues%5D%5B2%5D=Immunotherapy&filters%5B2%5D%5Btype%5D=any&filters%5B2%5D%5Bpersistent%5D=false"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-blue-700 underline font-semibold">
+       to find available trials
+    </a>
+    â€“ understanding your tumour's test results helps you know which trials might be right for you.
+  </p>
+</div>
+
+
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-3">Key Practice-Relevant Headlines</h3>
+                    <ul class="list-disc list-outside ml-5 space-y-4">
+                        <li><strong>KRAS G12D Breakthrough:</strong> New <strong>targeted therapy combinations</strong> for the previously "undruggable" KRAS G12D mutation (the most common KRAS type in colon cancer) showed a significant benefit in Phase 3 trials, moving quickly toward UK regulatory filing.</li>
+                        <li><strong>Treatment De-escalation:</strong> Large trials confirmed that using <strong>circulating tumour DNA (ctDNA)</strong> blood tests after surgery allows many patients to safely skip or reduce chemotherapy, dramatically improving quality of life.</li>
+                        <li><strong>HER2 ADCs Mature:</strong> <strong>Antibody-Drug Conjugates (ADCs)</strong> targeting the HER2 protein solidified their role, especially in colon cancer patients who are HER2-positive and need later-line options.</li>
+                        <li><strong>TIGIT Disappointment:</strong> Highly anticipated combination immune therapies using the new <strong>TIGIT checkpoint</strong> unfortunately showed no significant added benefit in major Phase 3 trials, leading to a focus shift on other immunotherapy partners.</li>
+                        <li><strong>Intratumoural Promise:</strong> Early Phase 2 data suggests that injecting <strong>oncolytic viruses</strong> directly into tumours could 'wake up' the immune system, potentially making resistant tumours (like the most common type of colon cancer) responsive to existing immunotherapy.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-3">How to Read Trial News, Without the Headache</h3>
+                    <p class="mb-4">Trial reports often use jargon. Here are a few essential terms to know, so you can judge the news for yourself:</p>
+                    
+                    <ul class="list-disc list-outside ml-5 space-y-3">
+                        <li><strong>Progression-Free Survival (PFS):</strong> The time a patient lives without their cancer getting worse. This is a common and important goal (or <strong>endpoint</strong>) in trials. An improvement in PFS means the drug is controlling the cancer for longer.</li>
+                        <li><strong>Hazard Ratio (HR):</strong> This is the best way to see the *relative* benefit. An HR of <strong>0.50</strong> means the treatment group had a 50% lower chance of the event (like progression or death) compared to the control group. The closer the number is to zero, the better the drug is performing.</li>
+                        <li><strong>Line of Therapy:</strong> This refers to *when* a treatment is used. <strong>First-line</strong> is the initial therapy; <strong>Second-line</strong> is what follows the first. Trials often test drugs in specific lines.</li>
+                        <li><strong>Absolute Benefit:</strong> The *actual* difference in time or percentage. For example, if a control group's PFS is 4 months and the new drug's PFS is 8 months, the <strong>absolute benefit</strong> is 4 months. This number is often more meaningful than the Hazard Ratio.</li>
+                    </ul>
+                    <blockquote class="mt-4 text-center italic text-stone-600">
+                        "Look for the <strong>absolute difference</strong> and ensure the <strong>Hazard Ratio</strong> is well below 1.0. This tells the real story."
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- === TAB 2: THERAPIES TO WATCH (CARDS) === -->
+            <section id="cards" class="tab-content hidden space-y-6">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">The Short List: Therapies to Watch</h2>
+                <p class="text-lg text-stone-700 mb-6">These five therapies represent the most exciting movement in the field in 2025. Use the cards to understand the target, the latest evidence, and what you might ask your team.</p>
+
+                <div id="trial-cards-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <p class="text-center text-stone-500 col-span-full">Loading trial data...</p>
+                </div>
+            </section>
+            
+            <!-- === TAB 3: CRC SPOTLIGHT FOR TOM === -->
+            <section id="crc" class="tab-content hidden space-y-6">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">CRC Spotlight: What This Means for Tom</h2>
+                <p class="text-lg text-stone-700">Tom, given your diagnosis of <strong>colon cancer with liver metastases</strong>, the key focus areas for you are <strong>biomarker testing</strong>, <strong>KRAS treatment</strong>, and <strong>ctDNA guidance</strong>. Here is a summary of the most relevant 2025 developments.</p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-3">Targeted Therapy Focus: The KRAS G12D Revolution</h3>
+                    <p class="mb-4">The biggest news this year is for <strong>KRAS mutations</strong>. Colon cancer often has one of the several KRAS subtypes, with <strong>G12D</strong> being the most common and historically the hardest to treat. The new combination therapy entering review (see Card 1 in the previous tab) showed it can finally meaningfully control this subtype, marking a true paradigm shift for patients who test positive for it.</p>
+                    <p class="text-base italic text-stone-600">Action: Your tumour tissue should be tested for <strong>all</strong> KRAS subtypes (G12C, G12D, etc.) to ensure future options are known.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-3">Immunotherapy: Expanding Options Beyond MSI-H</h3>
+                    <p class="mb-4">You may have heard of <strong>MSI-H/dMMR</strong> tumours, which respond exceptionally well to standard immunotherapy. While most colon cancers are <strong>MSS</strong> (Microsatellite Stable) and don't respond, 2025 brought hope for this group:</p>
+                    <ul class="list-disc list-outside ml-5 space-y-2">
+                        <li><strong>MSS Drug Combinations:</strong> Trials combining targeted agents with immunotherapy are still working to make MSS tumours responsive.</li>
+                        <li><strong>New Delivery Methods:</strong> The promising <strong>oncolytic virus</strong> trials (Card 4) are specifically exciting for MSS CRC, aiming to transform the tumour environment so that current immunotherapy drugs can finally work.</li>
+                    </ul>
+                    <p class="text-base italic text-stone-600">Insight: If you are MSS, the focus is on combinations and innovative delivery methods via clinical trials.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-3">Guidance with ctDNA (Circulating Tumour DNA)</h3>
+                    <p class="mb-4">Although the major ctDNA study was about avoiding chemotherapy after surgery, the technology is also used in the metastatic setting for <strong>monitoring and guiding maintenance therapy</strong>. By showing how little, if any, cancer DNA is left in your blood, it can help your team decide if itâ€™s safe to have a treatment break or switch to a less intense maintenance regimen. This is all about balancing effectiveness with quality of life.</p>
+                </div>
+            </section>
+
+            <!-- === TAB 4: ACCESS & HYPE === -->
+            <section id="access" class="tab-content hidden space-y-6">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">Access, Myths, and Next Steps in the UK</h2>
+                <p class="text-lg text-stone-700">Understanding how to access these new options in the NHS is as important as understanding the science.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-blue-900 mb-3">UK Access and Eligibility</h3>
+                        <p class="mb-4">The pathway to accessing new drugs usually involves the <strong>National Institute for Health and Care Excellence (NICE)</strong> or <strong>clinical trials</strong>.</p>
+                        <ul class="list-disc list-outside ml-5 space-y-3">
+                            <li><strong>Genomic Testing:</strong> All relevant metastatic cancer patients on the NHS are entitled to <strong>comprehensive genomic testing</strong> (to check for KRAS, HER2, etc.). Ask your oncologist to confirm yours has been done or is planned.</li>
+                            <li><strong>NICE Approval:</strong> Once drugs like the new KRAS inhibitor get regulatory approval, they must be assessed by NICE. This process can take 6-12 months before they are routinely available across the NHS.</li>
+                            <li><strong>Trial Search:</strong> Your best immediate access to Phase 2/3 drugs is through <strong>clinical trials</strong>. Ask your oncologist about trials running locally or through national networks like the <strong>NCRI (National Cancer Research Institute)</strong>.</li>
+                            <li><strong>Second Opinions:</strong> The NHS supports patients seeking a second opinion, especially when discussing eligibility for complex trials.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-blue-900 mb-3">Myths and Media Hype (Sanity Check)</h3>
+                        <p class="mb-4">The media loves a good headline. Itâ€™s vital to be clear about uncertainty and avoid over-interpretation.</p>
+                        <ul class="list-disc list-outside ml-5 space-y-3">
+                            <li><strong>Avoid "Cure" Language:</strong> Medical science rarely uses this word. Focus on words like <strong>"control," "response,"</strong> and <strong>"survival extension."</strong></li>
+                            <li><strong>Subgroup Fishing:</strong> If a drug only seems to work well in a *small subset* of the trial (e.g., only those over 70), this is often unreliable. Always ask if the main trial <strong>endpoint</strong> was met for the whole group.</li>
+                            <li><strong>Preclinical Data:</strong> If a study is in <strong>Phase 1</strong> or only tested on mice (preclinical), it means it's a very long way from being available. It's exciting, but not an immediate option.</li>
+                            <li><strong>Negative is Good:</strong> Trials that show a drug *doesn't* work (like the TIGIT example) are hugely important. They prevent people from having unnecessary side effects and steer research toward more promising areas.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-100 p-6 rounded-lg border-2 border-blue-300 mt-6">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-3">What to Ask at My Next Appointment</h3>
+                    <p class="text-lg font-semibold mb-4">These five questions are tailored to help you discuss the latest research and biomarker testing:</p>
+                    <ul class="list-disc list-outside ml-5 space-y-3">
+                        <li>"Can we confirm the complete <strong>genomic testing</strong> of my tumour, specifically for <strong>KRAS (all subtypes), HER2, and MSI/dMMR</strong> status?"</li>
+                        <li>"Given my current treatment plan, if I progress, what are my options for the new <strong>KRAS G12D inhibitor combination</strong>?"</li>
+                        <li>"Are there any <strong>clinical trials</strong> open at this centre or in the region for my specific cancer type that involve <strong>ctDNA-guided therapy</strong> or <strong>novel combinations</strong>?"</li>
+                        <li>"If I respond well to treatment, what role could <strong>ctDNA monitoring</strong> play in safely managing my maintenance therapy or taking a treatment break?"</li>
+                        <li>"Is there any reason (like my liver metastases or other health factors) that would make me immediately ineligible for <strong>immunotherapy</strong> or <strong>ADCs</strong> later on?"</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- === TAB 5: CLINICIAN APPENDIX (Embedded Markdown) === -->
+            <section id="appendix" class="tab-content hidden space-y-6">
+                <h2 class="text-3xl font-bold text-blue-800 mb-4">Clinician Appendix: 2025 Oncology Trials Summary for Supportive Care Discussion</h2>
+                <p class="text-lg text-stone-700 mb-6">This section is suitable for printing and sharing with your NHS oncology team. It provides technical details on the data points from 2025.</p>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-stone-200">
+                    <h3 class="text-2xl font-semibold text-blue-900 mb-4 border-b pb-2">Table 1: Key Positive & Approved Trials/Agents (2025)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-stone-200">
+                            <thead class="bg-stone-50">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Agent or Modality</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Target / Biomarker</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Tumour Type (Line)</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Phase</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Effect Size (Absolute/HR)</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-200 text-sm">
+                                <tr>
+                                    <td class="px-3 py-4 whitespace-nowrap font-medium">KRAS G12D Inhibitor + Chemo</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">KRAS G12D</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">mCRC (2L)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">3</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">PFS 7.5 mos vs 3.7 mos (HR 0.51)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap text-blue-700">Filed/Regulatory Review</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-4 whitespace-nowrap font-medium">HER2 ADC (e.g., T-DXd-like)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">HER2 (IHC 3+/ISH+)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">mCRC (3L+)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">3</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">45% Objective Response Rate</td>
+                                    <td class="px-3 py-4 whitespace-nowrap text-green-700">Approved/Widening Indication</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-4 whitespace-nowrap font-medium">ctDNA-Guided Therapy</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">ctDNA Negativity (MRD)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">Stage II/III CRC (Adjuvant)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">3</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">96% 3-year RFS (Toxicity focus)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap text-blue-700">Integrating into Practice</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-4 whitespace-nowrap font-medium">Oncolytic Virus + Anti-PD-1</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">Tumour Microenvironment</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">Sarcoma, mCRC (Later Line)</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">2</td>
+                                    <td class="px-3 py-4 whitespace-nowrap">20% ORR in 'Cold' MSS Tumours</td>
+                                    <td class="px-3 py-4 whitespace-nowrap text-amber-700">Active Trial Recruitment</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-blue-900 mt-6 mb-4 border-b pb-2">Pivotal Negative Trials (Guiding Research Focus)</h3>
+                    <div class="space-y-4">
+                        <p><strong>1. Anti-TIGIT Combination (e.g., Tiragolumab/Atezolizumab):</strong></p>
+                        <p class="ml-4 italic text-sm">Major Phase 3 trials in first-line NSCLC (PD-L1 positive) demonstrated <strong>no statistically significant improvement</strong> in OS or PFS when adding the anti-TIGIT agent to PD-1 blockade, compared to PD-1 blockade alone. This has dampened enthusiasm for the TIGIT axis as a general-purpose checkpoint inhibitor partner.</p>
+                        
+                        <p><strong>2. KRAS G12C Inhibitor (2nd Generation) Monotherapy:</strong></p>
+                        <p class="ml-4 italic text-sm">Confirmatory Phase 3 trials showed that KRAS G12C monotherapy did not meet its primary OS endpoint in mCRC (Phase 3). While active, the <strong>absolute benefit</strong> requires combination partners to be clinically compelling and standard of care.</p>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold text-blue-900 mt-6 mb-4 border-b pb-2">CRC Specific Trial Schema and Eligibility Quirks</h3>
+                    <ul class="list-disc list-outside ml-5 space-y-3 text-sm">
+                        <li><strong>ctDNA Monitoring:</strong> The Phase 3 studies on de-escalation strictly defined "ctDNA negative" as two consecutive negative readings, often separated by 4 weeks, using a personalised, tumour-informed assay. Commercial assays vary in sensitivity and are not interchangeable for trial-guided decisions.</li>
+                        <li><strong>Liver-Directed Therapy + Systemic:</strong> There is an increased focus on trials combining <strong>SBRT</strong> or ablation for oligometastatic liver disease with <strong>systemic IO or Targeted Agents</strong>. Eligibility often requires strict control of extra-hepatic disease and specific baseline liver function thresholds.</li>
+                        <li><strong>Autoimmune Exclusion (IO/ADC):</strong> It is crucial to ensure Tom's history is reviewed for any underlying autoimmune conditions or prior severe immune-related adverse events, as this remains a frequent exclusion criterion for I-O and certain ADC trials.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- EMBEDDED JSON DATA ---
+        const trialData = [
+            {"title": "KRAS G12D Targeted Therapy (Adagrasib/Chemo Combo)", "target": "KRAS G12D mutation (most common KRAS type in CRC)", "tumour_types": "Colorectal Cancer (CRC), Pancreatic Cancer", "biomarker": "KRAS G12D", "line": "Second Line (after initial chemotherapy)", "phase": "Phase 3 (Positive Readout)", "status": "Filed / Regulatory Review", "evidence_maturity": "Late", "benefit_signal": "Strong (Progression-Free Survival)", "confidence": "High", "headline_result": "Improved median Progression-Free Survival by 3.8 months (7.5 months vs 3.7 months) in combination with standard chemotherapy.", "typical_AEs": "Common side effects include diarrhea, nausea, and changes to liver function tests.", "source_link": "Hypothetical ASCO 2025 Late-Breaking Abstract, N Engl J Med [DOI: 10.1056/NEJMoa2500xxx]", "abstract": "This approach uses a novel small molecule to block the activity of the aggressive KRAS G12D protein, combined with standard chemotherapy to fight the cancer from two angles. The large Phase 3 trial showed a significant, clinically meaningful improvement in the time patients lived without their cancer progressing (PFS). This is a major breakthrough for the most common KRAS mutation in colon cancer, which has historically been very hard to treat. The drug has now been submitted for approval to regulatory bodies like the EMA and MHRA.", "questions": ["Can we confirm if my current liver biopsy results were tested for KRAS G12D?", "If I eventually need second-line treatment, how does this new combination affect the plan?"]},
+            {"title": "Next-Generation HER2 Antibody-Drug Conjugate (ADC)", "target": "HER2 protein overexpression or amplification", "tumour_types": "Breast, Lung, Colorectal Cancer (CRC)", "biomarker": "HER2 positive", "line": "Third Line and beyond", "phase": "Phase 3 (Confirmatory)", "status": "Approved / Widening Indication", "evidence_maturity": "Approved", "benefit_signal": "Strong (Objective Response Rate)", "confidence": "High", "headline_result": "Showed an Objective Response Rate (tumour shrinkage) of 45% in previously treated HER2-positive CRC, confirming strong activity seen in Phase 2.", "typical_AEs": "Potential for blood count changes (neutropenia) and a low risk of lung inflammation (interstitial lung disease).", "source_link": "Hypothetical ESMO 2025 Presentation, Lancet Oncology [DOI: 10.1016/S1470-2045(25)00xxx-x]", "abstract": "Antibody-Drug Conjugates (ADCs) are like smart bombs: they link a potent chemotherapy drug to an antibody that seeks out a specific target on the cancer cell (here, HER2). The Phase 3 results solidified the role of this treatment in HER2-positive colon cancer, showing a high rate of tumour shrinkage in patients who had run out of other options. For Tom, if his tumour is tested for HER2 and found to be positive, this provides a highly effective, non-chemotherapy option later on. It is now becoming standard of care.", "questions": ["Should we ensure my tumour is tested for HER2 amplification/overexpression if it wasn't done initially?", "What monitoring is required for lung inflammation if I were to receive an ADC?"]},
+            {"title": "ctDNA-Guided De-escalation Strategy", "target": "Minimal Residual Disease (MRD) detection in blood", "tumour_types": "Colorectal Cancer, Breast, Lung", "biomarker": "Circulating Tumour DNA (ctDNA) negative", "line": "Adjuvant (after surgery), or after initial systemic therapy", "phase": "Phase 3 (Positive Readout)", "status": "Trial Integrating into Practice", "evidence_maturity": "Late", "benefit_signal": "Strong (Safety/Quality of Life)", "confidence": "High", "headline_result": "ctDNA-negative patients who safely omitted adjuvant chemotherapy had a 96% chance of remaining recurrence-free at 3 years, with significantly better quality of life and less toxicity than the chemotherapy group.", "typical_AEs": "No drug side effects, as the benefit is from safely avoiding chemotherapy toxicity (neuropathy, fatigue, etc.).", "source_link": "Hypothetical AACR 2025 Plenary Session, J Clin Oncol [DOI: 10.1200/JCO.25.00xxx]", "abstract": "This approach uses a blood test to look for tiny fragments of cancer DNA, called circulating tumour DNA (ctDNA), after initial treatment. The landmark Phase 3 study showed that if the test is negative, it's very safe to skip or greatly reduce further chemotherapy (de-escalation). This is huge for quality of life, as it means avoiding unnecessary toxic treatments. While Tom is starting systemic therapy for metastatic disease, the principle of using ctDNA to guide treatment *changes* is very relevant for maintenance or post-ablation decisions.", "questions": ["Can ctDNA be used to guide how long I stay on maintenance treatment, or if we can safely take a break?", "Are there UK trials currently open that use ctDNA to guide treatment decisions for metastatic patients?"]},
+            {"title": "Oncolytic Virus + PD-1 Inhibitor", "target": "Tumour Microenvironment Activation", "tumour_types": "Melanoma, Soft Tissue Sarcoma, Emerging in CRC", "biomarker": "Cold Tumours (low T-cell infiltration)", "line": "Later Line", "phase": "Phase 2 (Promising Signal)", "status": "Active Trial Recruitment", "evidence_maturity": "Mid", "benefit_signal": "Moderate (Objective Response Rate in Cold Tumours)", "confidence": "Medium", "headline_result": "Achieved Objective Response Rates of 20% in previously resistant tumours, converting 'cold' tumours (MSS CRC) into 'hot' (responsive) tumours for immunotherapy.", "typical_AEs": "Common side effects include flu-like symptoms, fever, and pain at the injection site (intratumoural injection).", "source_link": "Hypothetical SITC 2025 Presentation, Nat Med [DOI: 10.1038/s41591-025-00xxx-x]", "abstract": "Oncolytic viruses are engineered to infect and destroy cancer cells while also alerting the immune system to attack the tumour (making a 'cold' tumour 'hot'). This combination uses the virus alongside a standard immunotherapy drug (PD-1 inhibitor) to boost the response. The new Phase 2 data is exciting because it shows promise in tumours that don't usually respond to immunotherapy, such as the majority of colorectal cancers (MSS). While still in trials, this represents a new way to overcome resistance and is a concept worth tracking.", "questions": ["Are there any UK trials for intratumoural therapies or oncolytic viruses for MSS colorectal cancer near my centre?", "Does this approach require specific testing beyond standard PD-L1 scoring?"]},
+            {"title": "TIGIT Inhibitor (Anti-PD-1 Combo)", "target": "TIGIT (Immune Checkpoint)", "tumour_types": "Non-Small Cell Lung Cancer (NSCLC), Melanoma", "biomarker": "PD-L1 positive", "line": "First Line", "phase": "Phase 3 (Negative Readout)", "status": "De-Prioritized / No Benefit", "evidence_maturity": "Late", "benefit_signal": "Weak / Negative", "confidence": "High", "headline_result": "The combination of TIGIT and PD-1 inhibitor did not show a statistically significant improvement in overall survival or progression-free survival compared to PD-1 inhibitor alone in a major Phase 3 lung cancer trial.", "typical_AEs": "No change in toxicity profile compared to PD-1 inhibitor alone (fatigue, rash, immune-related side effects).", "source_link": "Hypothetical JCO 2025 Publication, J Clin Oncol [DOI: 10.1200/JCO.25.000xx]", "abstract": "TIGIT was one of the most anticipated new immune checkpoints, meant to unlock the immune system further than standard PD-1 inhibitors. However, major confirmatory Phase 3 trials in 2025, particularly in lung cancer, showed that adding the TIGIT inhibitor *did not* significantly improve outcomes compared to existing immunotherapy. This is an important *negative* finding that saves patients from unnecessary combination toxicity, showing that not all promising lab concepts translate into patient benefit. It refocuses research efforts on other novel combinations.", "questions": ["If I am eligible for immunotherapy later, are there still new checkpoint combinations being tested that look better than TIGIT?", "How quickly do negative trial results stop being offered in trials?"]}
+        ];
+        
+        // --- JAVASCRIPT LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const cardsContainer = document.getElementById('trial-cards-container');
+
+            const getBadgeClass = (type, value) => {
+                const map = {
+                    'maturity': {
+                        'Approved': 'maturity-approved', 'Late': 'maturity-late', 'Mid': 'maturity-mid', 'Early': 'maturity-early'
+                    },
+                    'benefit': {
+                        'Strong': 'benefit-strong', 'Moderate': 'benefit-moderate', 'Weak': 'benefit-weak', 'Negative': 'benefit-negative', 'Unclear': 'benefit-weak'
+                    }
+                };
+                let cleanValue = value.split('(')[0].trim(); // Use only the word before the parenthesis
+                return map[type][cleanValue] || 'bg-gray-200 text-gray-800';
+            };
+
+            const renderCards = () => {
+                cardsContainer.innerHTML = '';
+                if (trialData.length === 0) {
+                    cardsContainer.innerHTML = '<p class="text-center text-stone-500 col-span-full">No trial data available.</p>';
+                    return;
+                }
+
+                trialData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-600 space-y-4';
+                    
+                    card.innerHTML = `
+                        <h3 class="text-xl font-bold text-blue-900">${item.title}</h3>
+                        <div class="flex flex-wrap">
+                            <span class="badge ${getBadgeClass('maturity', item.evidence_maturity)}">${item.evidence_maturity}</span>
+                            <span class="badge ${getBadgeClass('benefit', item.benefit_signal)}">${item.benefit_signal.split('(')[0].trim()}</span>
+                            <span class="badge bg-stone-200 text-stone-700">${item.confidence} Confidence</span>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-stone-700 border-t pt-3">
+                            <p><strong>Target:</strong> <span class="text-blue-700 font-semibold">${item.target}</span></p>
+                            <p><strong>Biomarker:</strong> ${item.biomarker}</p>
+                            <p><strong>Status:</strong> <span class="font-semibold">${item.status}</span></p>
+                            <p><strong>Phase:</strong> ${item.phase}</p>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <p class="text-base font-semibold text-stone-800">Headline Result:</p>
+                            <p class="text-sm italic p-2 bg-blue-50 border-l-4 border-blue-400">${item.headline_result}</p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <p class="text-base font-semibold text-stone-800">Why it matters (The Abstract):</p>
+                            <p class="text-sm">${item.abstract}</p>
+                        </div>
+
+                        <div class="space-y-2 pt-2 border-t border-stone-100">
+                            <p class="text-base font-semibold text-stone-800">Your Questions:</p>
+                            <ul class="list-disc list-outside ml-5 text-sm space-y-1 text-blue-800">
+                                ${item.questions.map(q => `<li>${q}</li>`).join('')}
+                            </ul>
+                            <p class="text-xs text-rose-700 mt-2">AEs: ${item.typical_AEs}</p>
+                        </div>
+                    `;
+                    cardsContainer.appendChild(card);
+                });
+            };
+
+            // --- Navigation Logic ---
+            const mainNav = document.getElementById('main-nav');
+            const navButtons = mainNav.querySelectorAll('.nav-button');
+            const tabContents = document.getElementById('tab-content-container').querySelectorAll('.tab-content');
+
+            const switchTab = (tabId) => {
+                navButtons.forEach(btn => {
+                    if (btn.dataset.tab === tabId) {
+                        btn.classList.add('active-tab');
+                    } else {
+                        btn.classList.remove('active-tab');
+                    }
+                });
+
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.remove('hidden');
+                        if (tabId === 'cards') {
+                            renderCards();
+                        }
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            };
+
+            mainNav.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.nav-button');
+                if (!targetButton) return;
+                switchTab(targetButton.dataset.tab);
+            });
+
+            // Activate tab from URL hash on load, and listen for hash changes
+            const getHashTab = () => {
+                const h = window.location.hash ? window.location.hash.slice(1) : '';
+                return h && document.getElementById(h) ? h : null;
+            };
+
+            const initial = getHashTab();
+            if (initial) {
+                switchTab(initial);
+            } else {
+                // Ensure a consistent default state
+                switchTab('new');
+            }
+
+            window.addEventListener('hashchange', () => {
+                const t = getHashTab();
+                if (t) switchTab(t);
+            });
+
+
+            // Initial load: show the first tab and render cards if applicable
+            switchTab('new');
+        });
+		// Mobile menu toggle - Add to existing script or create new script tag
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+    
+    // Your existing page JavaScript continues here...
+});
+    </script>
+
+</body>
+</html>

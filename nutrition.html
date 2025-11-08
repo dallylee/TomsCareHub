@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<!-- Chosen Palette: Warm Neutral & Sage -->
+<!-- Application Structure Plan: The SPA uses a task-oriented, tabbed navigation structure. This is designed for a user (Tom) who is likely feeling overwhelmed and needs information in context-specific, manageable chunks. The structure prioritizes immediate needs ("Start Here", "Symptom Playbook") and practical actions ("Your Core Plate") over deep-dive research, which is organized separately ("Foods & Patterns", "Supplements"). This non-linear design allows Tom to access *only* the information he needs, when he needs it, reducing cognitive load. For example, he can jump directly to "Nausea" tips without scrolling past supplement science. The final "For Your Team" tab isolates the clinical data, making it easy to share without him having to parse it. -->
+<!-- Visualization & Content Choices:
+1. Protein Target (Report Info) -> Goal: Personalize and simplify daily protein goal -> Viz: Interactive Bar Chart (Chart.js/Canvas) -> Interaction: User adjusts a weight slider (in kg), chart dynamically updates showing their personal min (1.2g/kg) and target (1.5g/kg) protein in grams. A static bar shows an average per-meal target. -> Justification: Makes an abstract clinical target (g/kg) concrete, personal, and actionable. (Location: "Your Core Plate" tab).
+2. Supplement Evidence (Report Info) -> Goal: Allow user to compare evidence and safety for many supplements -> Presentation: Interactive HTML Table -> Interaction: JS-powered filter buttons ("All", "Weight/Symptom", "General Health") toggle the visibility of table rows based on `data-category`. -> Justification: A table is clearer than a chart for many disparate items. The filtering makes the large amount of data manageable and lets Tom focus on his specific concern (e.g., "Symptom Support"). (Location: "Supplements Guide" tab).
+3. Symptom Management (Report Info) -> Goal: Provide fast, targeted relief strategies -> Presentation: HTML content blocks -> Interaction: A sub-navigation bar with buttons (Nausea, Diarrhoea, etc.) shows/hides the relevant content block. -> Justification: Mimics the main tabbed interface, providing a clean, focused view for a user who is actively experiencing a symptom. (Location: "Symptom Playbook" tab).
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eating for Strength and Steadiness: Nutrition for Colon Cancer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfdfc; 
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .nav-button {
+            padding: 0.75rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .nav-button.active-tab {
+            background-color: #065f46; 
+            color: #ffffff;
+        }
+        .nav-button:not(.active-tab) {
+            background-color: #e7e5e4; 
+            color: #44403c;
+        }
+        .nav-button:not(.active-tab):hover {
+            background-color: #d6d3d1;
+        }
+        .sub-nav-button {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #a3e635;
+            cursor: pointer;
+        }
+        .sub-nav-button.active-sub-tab {
+            background-color: #a3e635; 
+            color: #1a2e05;
+        }
+        .sub-nav-button:not(.active-sub-tab) {
+            background-color: #f7fee7; 
+            color: #3f6212;
+        }
+        .sub-nav-button:not(.active-sub-tab):hover {
+            background-color: #ecfccb;
+        }
+        .evidence-high {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .evidence-moderate {
+            background-color: #fef9c3;
+            color: #854d0e;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .evidence-low {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .evidence-insufficient {
+            background-color: #e7e5e4;
+            color: #57534e;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+<!-- Navigation Header - Add this right after <body> tag -->
+<nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a href="index.html" class="flex items-center">
+                    <img src="assets/tomslogo.png" alt="Tom's Care Hub Logo" class="h-10 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <h1 class="text-2xl font-bold text-teal-700" style="display:none;">Tom's Care Hub</h1>
+                </a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Home</a>
+                <a href="chemo.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Chemo</a>
+                <a href="nutrition.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Nutrition</a>
+                <a href="mindfulness.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Mindfulness</a>
+                <a href="research.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Research</a>
+                <a href="Alternative.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Alternative</a>
+                <a href="resources.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Resources</a>
+                <a href="financial-support.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Financial Support</a>
+            </div>
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500 p-2">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <a href="index.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Home</a>
+        <a href="chemo.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Chemo</a>
+        <a href="nutrition.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Nutrition</a>
+        <a href="mindfulness.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Mindfulness</a>
+        <a href="research.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Research</a>
+        <a href="Alternative.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Alternative</a>
+        <a href="resources.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Resources</a>
+        <a href="financial-support.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Financial Support</a>
+    </div>
+</nav>
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <header class="mb-6 border-b border-stone-200 pb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-emerald-900 mb-2">Eating for Strength and Steadiness</h1>
+            <p class="text-xl text-stone-700">A practical nutrition guide to support you through chemotherapy.</p>
+        </header>
+
+        <nav id="main-nav" class="flex flex-wrap border-b border-stone-300 mb-6">
+            <button class="nav-button active-tab" data-tab="home">Start Here</button>
+            <button class="nav-button" data-tab="symptoms">Symptom Playbook</button>
+            <button class="nav-button" data-tab="plate">Your Core Plate</button>
+            <button class="nav-button" data-tab="foods">Foods & Patterns</button>
+            <button class="nav-button" data-tab="supplements">Supplements Guide</button>
+            <button class="nav-button" data-tab="clinician">For Your Team</button>
+        </nav>
+
+        <main id="tab-content-container">
+
+            <!-- === TAB 1: HOME === -->
+            <section id="home" class="tab-content">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Liži pičku</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">An Opening Note</h3>
+                            <p class="mb-4">So here I planned to just tell you to eat Greek tomato, because Jesus did. But instead here’s a little guide to give you practical, evidence-based ideas on how nutrition can support you over the next few weeks and months.</p>
+                            <p class="mb-4">This guide focuses on using food to help you tolerate treatment, maintain your strength, manage side effects, and support your overall wellbeing. It's based on the best human evidence I could find specifically for colorectal cancer.</p>
+                            <p class="font-semibold text-rose-800 bg-rose-50 p-3 rounded-md"><strong>Most importantly:</strong> This information is to support you alongside your medical care, not replace it. Your NHS oncology team, specialist dietitian, and pharmacist are your primary source of advice. Please talk to them before starting any new supplements or making big dietary changes.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">What Matters Most: A Checklist</h3>
+                            <p class="mb-4">If you're feeling overwhelmed, just focus on these key things:</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <span class="text-emerald-700 font-bold text-xl mr-3">âœ“</span>
+                                    <span><strong>Stay nourished and hydrated.</strong> Your body needs fuel and water to cope with treatment. Aim for small, regular meals and sip drinks throughout the day. Try to avoid unintended weight loss.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-emerald-700 font-bold text-xl mr-3">âœ“</span>
+                                    <span><strong>Prioritise protein.</strong> Protein is vital for maintaining muscle and repairing tissues. Aim to include a source (like fish, chicken, eggs, dairy, beans, or lentils) with every meal and snack.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-emerald-700 font-bold text-xl mr-3">âœ“</span>
+                                    <span><strong>Be guided by your symptoms.</strong> Some days will be harder than others. On bad days, "fed is best." Eat what you can tolerate. On good days, aim for more nourishing, fibre-rich foods. We have a whole section for this.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-emerald-700 font-bold text-xl mr-3">âœ“</span>
+                                    <span><strong>Practice food safety.</strong> When your immune system is low (neutropenia), it's extra important to handle food safely. Wash hands, cook food thoroughly, and be careful with high-risk items.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-emerald-700 font-bold text-xl mr-3">âœ“</span>
+                                    <span><strong>Talk to your team.</strong> Keep your doctors and nurses updated on any side effects, especially severe diarrhoea, constipation, or poor appetite. Ask for a referral to an NHS dietitian.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-emerald-50 p-6 rounded-lg border border-emerald-200">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Questions to Ask Your Team</h3>
+                            <p class="mb-4">Jot down your questions and take them to your next appointment:</p>
+                            <ul class="list-disc list-inside space-y-2 text-stone-700">
+                                <li>Can I be referred to a specialist oncology dietitian?</li>
+                                <li>My appetite is low and I'm losing weight. What support is available? (e.g., prescription sip feeds)</li>
+                                <li>Can you check my Vitamin D level?</li>
+                                <li>I'm thinking of taking [supplement name]. Is this safe to take with my specific chemotherapy (FOLFOX/CAPOX/FOLFIRI)?</li>
+                                <li>I'm struggling with [symptom name]. What else can I try?</li>
+                            </ul>
+                        </div>
+                        <div class="bg-rose-50 p-6 rounded-lg border border-rose-200">
+                            <h3 class="text-2xl font-semibold text-rose-800 mb-3">When to Pause or Seek Advice</h3>
+                            <p class="mb-4">This guide is for general support, but some symptoms need urgent medical attention. Contact your oncology helpline or NHS 111 if you experience:</p>
+                            <ul class="list-disc list-inside space-y-2 text-rose-700">
+                                <li>A high temperature (fever) during chemotherapy â€“ this could be neutropenic sepsis.</li>
+                                <li>Severe, uncontrolled diarrhoea (e.g., more than 6-8 times a day) or vomiting.</li>
+                                <li>Inability to keep any fluids down for more than 12-24 hours.</li>
+                                <li>No bowel movement for 3 or more days, despite trying laxatives.</li>
+                                <li>Sudden shortness of breath or chest pain.</li>
+                                <li>Extreme fatigue, dizziness, or confusion.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 2: SYMPTOM PLAYBOOK === -->
+            <section id="symptoms" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Symptom Playbook</h2>
+                <p class="text-lg text-stone-700 mb-6">Chemotherapy can cause side effects. How you eat can make a real difference in managing them. Here are strategies for the most common issues. Choose what feels right for you today.</p>
+                
+                <div id="symptom-nav" class="flex flex-wrap mb-6">
+                    <button class="sub-nav-button active-sub-tab" data-symptom="nausea">Nausea & Vomiting</button>
+                    <button class="sub-nav-button" data-symptom="diarrhoea">Diarrhoea</button>
+                    <button class="sub-nav-button" data-symptom="constipation">Constipation</button>
+                    <button class="sub-nav-button" data-symptom="mouth">Sore Mouth</button>
+                    <button class="sub-nav-button" data-symptom="taste">Taste Changes</button>
+                    <button class="sub-nav-button" data-symptom="fatigue">Fatigue & Low Appetite</button>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                    <div id="symptom-nausea" class="symptom-content">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Managing Nausea & Vomiting</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><strong>Eat small and often.</strong> An empty stomach can make nausea worse. Try 5-6 small meals or snacks instead of 3 large ones.</li>
+                            <li><strong>Go for "plain and dry."</strong> Try crackers, toast, rich tea biscuits, or plain rice. These are often well-tolerated.</li>
+                            <li><strong>Sip fluids slowly.</strong> Don't gulp. Try sipping water, weak squash, or clear broths. Some people find ginger tea or flat ginger ale helpful.</li>
+                            <li><strong>Choose cold foods.</strong> Cold or room-temperature foods often have less smell than hot foods, which can be off-putting. Try a chicken sandwich, yoghurt, or fruit.</li>
+                            <li><strong>Avoid triggers.</strong> Steer clear of greasy, fried, spicy, or very sweet foods for now.</li>
+                            <li><strong>Tell your team.</strong> Don't just "put up with it." Your team can prescribe very effective anti-sickness medications. Take them as prescribed, often *before* you start to feel sick.</li>
+                        </ul>
+                    </div>
+                    <div id="symptom-diarrhoea" class="symptom-content hidden">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Managing Diarrhoea</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><strong>Hydrate and replace salts.</strong> This is the #1 priority. Sip water, weak squash, or rehydration drinks (like Dioralyte). Broth or soup can help replace lost salts.</li>
+                            <li><strong>Go "low and white."</strong> For a few days, switch to low-fibre, "low-residue" foods. Think white bread, white rice, white pasta, potatoes (no skin), plain chicken, fish, and eggs.</li>
+                            <li><strong>Try the "BRAT" foods.</strong> Bananas, white Rice, Applesauce (stewed apple), and dry Toast are gentle on the gut.</li>
+                            <li><strong>Limit triggers.</strong> Avoid greasy/fried foods, spicy foods, caffeine, alcohol, and very high-fibre foods (like raw veg, skins, pips, and whole grains) until things settle.</li>
+                            <li><strong>Re-introduce fibre slowly.</strong> Once the diarrhoea has stopped, gradually re-introduce fibre-rich foods over several days.</li>
+                            <li><strong>Tell your team.</strong> Severe diarrhoea (e.g., 6+ times a day) needs to be reported, especially with FOLFIRI, as it can be serious.</li>
+                        </ul>
+                    </div>
+                    <div id="symptom-constipation" class="symptom-content hidden">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Managing Constipation</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><strong>Hydrate well.</strong> Fluids help to soften stools. Aim for 8-10 glasses of fluid a day, unless you've been told otherwise. Warm drinks in the morning can help.</li>
+                            <li><strong>Gently increase fibre.</strong> If you're eating well, slowly increase your intake of soluble fibre (from oats, pulses, fruits) and insoluble fibre (from whole grains, nuts, veg).</li>
+                            <li><strong>Try "P" foods.</strong> Prunes, pears, and pulses can all help get things moving. Start with a small amount.</li>
+                            <li><strong>Get moving, if you can.</strong> Gentle activity, even just a short walk, can help stimulate your bowel.</li>
+                            <li><strong>Talk to your team early.</strong> Constipation is a very common side effect of chemotherapy and pain relief. Your team can prescribe safe and effective laxatives. Don't wait until it's been several days.</li>
+                        </ul>
+                    </div>
+                    <div id="symptom-mouth" class="symptom-content hidden">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Managing a Sore Mouth (Mucositis)</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><strong>Choose soft, moist foods.</strong> Think soups, stews, scrambled eggs, mashed potatoes, yoghurt, ice cream, or smoothies. Add gravy or sauces to moisten food.</li>
+                            <li><strong>Avoid "sharp" foods.</strong> Stay away from anything hard, crunchy, or acidic. This includes crisps, crusty bread, raw vegetables, and citrus fruits (oranges, lemons, tomatoes).</li>
+                            <li><strong>Go for cool or warm, not hot.</strong> Very hot foods can be painful. Let food cool down. Sucking on ice chips can be soothing.</li>
+                            <li><strong>Use a straw.</strong> Sipping drinks or smoothies through a straw can help bypass sore areas.</li>
+                            <li><strong>Practice good mouth care.</strong> Use the mouthwash your team provides. Use a very soft toothbrush. Rinse your mouth with a salt or bicarbonate of soda solution after eating.</li>
+                            <li><strong>Glutamine?</strong> There is some evidence that L-glutamine powder swished in the mouth may help. (See the Supplements section and discuss with your team).</li>
+                        </ul>
+                    </div>
+                    <div id="symptom-taste" class="symptom-content hidden">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Managing Taste Changes</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><strong>If food tastes bland:</strong> Add flavour with herbs, spices (if your mouth isn't sore), garlic, or ginger. Marinades can help. A little salt or sugar can sometimes lift flavours.</li>
+                            <li><strong>If food tastes metallic:</strong> This is very common with 5-FU. Try using plastic or wooden cutlery instead of metal. Drink from a glass or mug, not a can.</li>
+                            <li><strong>Try tart flavours.</strong> A little lemon, lime, or vinegar (if your mouth is okay) can help cut through a metallic taste. Sucking on sugar-free lemon sweets can help.</li>
+                            <li><strong>Go for cold foods.</strong> Cold chicken, salads, or sandwiches may have less of a metallic taste than hot meals.</li>
+                            <li><strong>Try new foods.</strong> Sometimes the foods you usually love taste the worst. Be open to trying different things for a while.</li>
+                            <li><strong>Zinc?</strong> There's low-to-moderate evidence that zinc supplements *might* help with taste changes. (See the Supplements section and ask your team).</li>
+                        </ul>
+                    </div>
+                    <div id="symptom-fatigue" class="symptom-content hidden">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Managing Fatigue & Low Appetite</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><strong>Eat small and often.</strong> The "little and often" rule is key. Aim for a snack or small meal every 2-3 hours.</li>
+                            <li><strong>Make every bite count.</strong> Choose "nutrient-dense" foods. This means foods with lots of calories and protein in a small package.
+                                <ul>
+                                    <li>- Add butter, olive oil, or cream to potatoes or soups.</li>
+                                    <li>- Add grated cheese to meals.</li>
+                                    <li>- Snack on nuts, seeds, or peanut butter (if you can).</li>
+                                    <li>- Use full-fat milk and yoghurt.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Have snacks ready.</strong> Keep easy-to-grab snacks visible: a bowl of nuts, cheese and crackers, pots of yoghurt, fruit.</li>
+                            <li><strong>Try nourishing drinks.</strong> If eating feels too much, sip on smoothies, milkshakes, or soups. Your team can also prescribe high-calorie "sip feeds."</li>
+                            <li><strong>Accept help.</strong> Let friends and family cook for you or prepare snacks. A freezer full of easy-to-heat meals is a huge help.</li>
+                            <li><strong>Gentle movement.</strong> It sounds counter-intuitive, but a very short, gentle walk can sometimes help boost energy levels and stimulate appetite.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 3: YOUR CORE PLATE === -->
+            <section id="plate" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Building Your Core Plate</h2>
+                <p class="text-lg text-stone-700 mb-6">On days you feel well, focusing on balanced meals can help you build and maintain strength. This section is about the "how-to" of eating well, including your personal protein goals and practical meal ideas.</p>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Your Personal Protein Target</h3>
+                        <p class="mb-4">Protein is your body's main building block, crucial for healing and keeping your muscles strong during treatment. The target for people with cancer is higher than for the general public, typically <strong>1.2 to 1.5 grams of protein per kilogram of your body weight</strong> per day.</p>
+                        <p class="mb-4">Use the slider below to get a rough idea of your personal daily target. <em>(Note: 1 stone is ~6.35kg).</em></p>
+                        
+                        <div class="mb-4">
+                            <label for="weight-slider" class="block font-semibold mb-2">Your approximate weight: <span id="weight-label" class="font-bold text-emerald-800">75 kg</span></label>
+                            <input type="range" id="weight-slider" min="50" max="120" value="75" class="w-full">
+                            <div class="flex justify-between text-sm text-stone-600">
+                                <span>50kg (~8st)</span>
+                                <span>85kg (~13.5st)</span>
+                                <span>120kg (~19st)</span>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="proteinChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-stone-600 mt-2">This chart is an estimate. Your dietitian can give you a precise target.</p>
+                        
+                        <h4 class="text-xl font-semibold text-emerald-800 mt-6 mb-3">How to Hit Your Target</h4>
+                        <p class="mb-3">The best way is to spread your protein intake across the day. Aim for 20-30g of protein at each main meal, plus protein in your snacks.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>A 100g chicken breast</strong> has ~30g protein.</li>
+                            <li><strong>A 100g salmon fillet</strong> has ~22g protein.</li>
+                            <li><strong>2 large eggs</strong> have ~13g protein.</li>
+                            <li><strong>A pot of Greek yoghurt (170g)</strong> has ~17g protein.</li>
+                            <li><strong>A tin of lentils (drained)</strong> has ~18g protein.</li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Hydration is Key</h3>
+                            <p class="mb-4">Staying hydrated is vital. It helps your kidneys flush out the chemotherapy drugs and can manage side effects like fatigue and constipation. Aim for 8-10 glasses (about 2 litres) of fluids a day.</p>
+                            <p class="font-semibold">All fluids count:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>Water, squash, herbal teas, milk.</li>
+                                <li>Soup, broth, and jelly also count.</li>
+                                <li>If you have diarrhoea, you will need more fluids and salts (see Symptom Playbook).</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">A Simple Shopping List</h3>
+                            <p class="mb-4">Stock your kitchen with easy, nourishing options:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li><strong>Protein Power:</strong> Tinned fish (tuna, salmon), eggs, full-fat Greek yoghurt, cottage cheese, pre-cooked chicken, tofu, tinned beans and lentils.</li>
+                                <li><strong>Easy Carbs:</strong> Oats (porridge), white rice, white bread, crackers (for nausea), wholemeal bread (for good days), potatoes.</li>
+                                <li><strong>Fluids:</strong> Herbal teas (peppermint, ginger), squash, fruit juice (to mix with water), milk, soup.</li>
+                                <li><strong>Symptom Helpers:</strong> Bananas, applesauce, dry biscuits, ice lollies.</li>
+                                <li><strong>Flavour:</strong> Peanut butter, jam, herbs, spices.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Sample 2-Day Menu Idea</h3>
+                            <p class="text-sm text-stone-600 mb-4">(This is just an idea, adjust for your symptoms and preferences)</p>
+                            <h4 class="font-semibold text-stone-700">Day 1 (A "Good" Day)</h4>
+                            <ul class="text-sm list-disc list-inside space-y-1 mb-3">
+                                <li><strong>Breakfast:</strong> Porridge made with milk, topped with berries and seeds.</li>
+                                <li><strong>Snack:</strong> Greek yoghurt and a banana.</li>
+                                <li><strong>Lunch:</strong> Salmon fillet with new potatoes and green beans.</li>
+                                <li><strong>Snack:</strong> Handful of nuts and an apple.</li>
+                                <li><strong>Dinner:</strong> Chicken and vegetable stir-fry with brown rice.</li>
+                            </ul>
+                            <h4 class="font-semibold text-stone-700">Day 2 (A "Symptom" Day)</h4>
+                            <ul class="text-sm list-disc list-inside space-y-1">
+                                <li><strong>Breakfast:</strong> 2 slices of white toast with butter.</li>
+                                <li><strong>Snack:</strong> A few dry crackers.</li>
+                                <li><strong>Lunch:</strong> Small bowl of plain chicken and rice soup.</li>
+                                <li><strong>Snack:</strong> A pot of jelly or an ice lolly.</li>
+                                <li><strong>Dinner:</strong> Scrambled eggs on white toast.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 4: FOODS & PATTERNS === -->
+            <section id="foods" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Exploring Foods & Dietary Patterns</h2>
+                <p class="text-lg text-stone-700 mb-6">When you're feeling well, you might wonder about the bigger picture: what style of eating is best? And are there any "superfoods"? Here's what the evidence says. The key is progress, not perfection.</p>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Dietary Patterns: The Big Picture</h3>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h4 class="text-xl font-semibold text-stone-800 mb-2">Mediterranean & Prudent Patterns</h4>
+                            <p>This is where the strongest evidence lies. A "Mediterranean" or "Prudent" diet is not a strict diet, but a pattern rich in vegetables, fruits, whole grains, beans, nuts, and fish. It's low in red/processed meats and sugary snacks. This pattern is linked to better health outcomes and may help support your body's resilience.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h4 class="text-xl font-semibold text-stone-800 mb-2">Plant-Forward & Fibre</h4>
+                            <p class="mb-3">You don't need to be vegetarian, but aiming for a "plant-forward" plate is a great goal. This means filling at least half your plate with plant foods (veg, fruit, whole grains, pulses). Fibre from these foods is crucial for a healthy gut microbiome, which is very important in colon cancer. </p>
+                            <p class="font-semibold"><strong>However:</strong> If you have diarrhoea or a blockage, you will need to follow your team's advice on a low-fibre diet temporarily.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h4 class="text-xl font-semibold text-stone-800 mb-2">Fasting, TRE, and Keto Diets</h4>
+                            <p class="mb-3">You may hear a lot about these. Here's the current clinical view:</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li><strong>Fasting/Fasting-Mimicking:</strong> Some early human trials suggest short-term fasting *during* chemo *might* reduce side effects. However, the evidence is not yet strong, and it's not suitable for everyone. <strong>CRITICAL: Do not attempt fasting without close supervision from your oncology team.</strong> Weight loss is a major risk.</li>
+                                <li><strong>Time-Restricted Eating (TRE):</strong> This means eating within an 8-10 hour window (e.g., 10am-6pm). This is easier than fasting and has some general health benefits. It may be safe to try, *but only if* you can still eat enough food to maintain your weight.</li>
+                                <li><strong>Ketogenic (Keto) Diets:</strong> Very low-carb, high-fat diets. There is no strong human evidence that keto diets improve cancer outcomes, and they can be very hard to follow and may worsen weight/muscle loss. Not generally recommended during treatment.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                            <h4 class="text-xl font-semibold text-stone-800 mb-2">Alcohol</h4>
+                            <p>It's generally best to avoid alcohol during chemotherapy. It can interact with your drugs, worsen side effects like a sore mouth, and puts extra strain on your liver (which is already working hard). If you do choose to have a drink, please discuss it with your doctor first.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Specific Foods with Good Signals</h3>
+                        <p class="mb-4">No single food is a miracle cure, but some have good evidence for supporting general health and a healthy gut.</p>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                                <h4 class="font-semibold text-emerald-900">Oily Fish (Omega-3)</h4>
+                                <p class="text-sm">Salmon, mackerel, herring, and sardines. Rich in EPA and DHA, which may help reduce inflammation and maintain weight. Aim for 1-2 portions a week.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                                <h4 class="font-semibold text-emerald-900">Whole Grains, Nuts, Seeds</h4>
+                                <p class="text-sm">Oats, brown rice, pulses, and nuts are packed with fibre that feeds your good gut bacteria (prebiotics). Great on "good" days.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                                <h4 class="font-semibold text-emerald-900">Crucifers & Alliums</h4>
+                                <p class="text-sm">Broccoli, cauliflower, kale, as well as onions, garlic, and leeks. These contain compounds studied for their protective effects. Cook them well if you feel bloated.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                                <h4 class="font-semibold text-emerald-900">Mushrooms</h4>
+                                <p class="text-sm">Many types of mushrooms (even simple button mushrooms) contain unique fibres like beta-glucans, which can support the immune system. Cook well.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                                <h4 class="font-semibold text-emerald-900">Fermented Foods</h4>
+                                <p class="text-sm">Live yoghurt, kefir, and sauerkraut contain beneficial bacteria (probiotics). They can be a good way to support your gut microbiome.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                                <h4 class="font-semibold text-emerald-900">Coffee & Tea</h4>
+                                <p class="text-sm">Good news for coffee lovers. Evidence in CRC survivors suggests moderate coffee intake (2-4 cups) is safe and possibly beneficial. Green tea is also rich in antioxidants.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- === TAB 5: SUPPLEMENTS GUIDE === -->
+            <section id="supplements" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">A Guide to Supplements</h2>
+                <p class="text-lg text-stone-700 mb-6">This is one of the most confusing topics. Many supplements are marketed to patients, but few have strong human evidence of benefit during chemotherapy, and some can be harmful. <strong>Always tell your oncology pharmacist about any supplement you take.</strong></p>
+
+                <div class="bg-rose-50 p-6 rounded-lg border-4 border-rose-300 mb-6">
+                    <h3 class="text-2xl font-semibold text-rose-800 mb-3">CRITICAL: Safety First - Interactions & Cautions</h3>
+                    <p class="text-rose-700 mb-4">Some supplements and foods can seriously interfere with your chemotherapy, making it less effective or increasing side effects. The chemo regimens for colon cancer (like FOLFOX, CAPOX, FOLFIRI) are sensitive.</p>
+                    <ul class="list-disc list-inside space-y-2 font-semibold text-rose-800">
+                        <li><strong>DO NOT TAKE ST. JOHN'S WORT.</strong> It can speed up the breakdown of many chemo drugs (especially irinotecan), making your treatment less effective.</li>
+                        <li><strong>AVOID GRAPEFRUIT & SEVILLE ORANGES.</strong> This includes the juice. They can block the breakdown of some drugs (like irinotecan), leading to dangerously high levels in your body.</li>
+                        <li><strong>BEWARE HIGH-DOSE ANTIOXIDANTS.</strong> Avoid high-dose "cocktails" of vitamins A, C, E, or selenium *during* chemotherapy, as they *might* interfere with how chemo works. A standard multivitamin is usually fine, but ask your team.</li>
+                        <li><strong>CHECK BLOOD THINNERS.</strong> If you take warfarin or other anticoagulants, be cautious. High-dose fish oil, turmeric (curcumin), and vitamin E can increase bleeding risk.</li>
+                        <li><strong>FOLATE & 5-FU:</strong> Your chemo (5-FU) works by blocking folate. Do not take high-dose folic acid supplements unless specifically told to by your oncologist. The folate (folinic acid) given *with* your chemo is part of the treatment.</li>
+                    </ul>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Evidence Legend</h3>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <span class="evidence-high">High</span><span>Strong support from multiple good-quality human trials.</span>
+                </div>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <span class="evidence-moderate">Moderate</span><span>Some supportive human trials, but more research is needed.</span>
+                </div>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <span class="evidence-low">Low</span><span>Based on small trials, animal studies, or theory. Not yet proven in humans.</span>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-emerald-800 mb-4">Supplements with Human Evidence</h3>
+                <div id="supplement-nav" class="flex flex-wrap mb-4">
+                    <button class="sub-nav-button active-sub-tab" data-filter="all">Show All</button>
+                    <button class="sub-nav-button" data-filter="symptom">Symptom Support</button>
+                    <button class="sub-nav-button" data-filter="muscle">Weight & Muscle</button>
+                    <button class="sub-nav-button" data-filter="general">General Health</button>
+                </div>
+
+                <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-stone-200">
+                    <table class="w-full min-w-[800px]">
+                        <thead class="bg-stone-100 text-left text-stone-700">
+                            <tr>
+                                <th class="p-4">Supplement</th>
+                                <th class="p-4">Potential Purpose</th>
+                                <th class="p-4">Evidence</th>
+                                <th class="p-4">Typical Studied Dose</th>
+                                <th class="p-4">Cautions (Always check with your team)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplement-table" class="divide-y divide-stone-200">
+                            <tr data-category="general">
+                                <td class="p-4 font-semibold">Vitamin D</td>
+                                <td class="p-4">Many people in the UK are low. Essential for bone and immune health.</td>
+                                <td class="p-4"><span class="evidence-high">High</span> (for correcting deficiency)</td>
+                                <td class="p-4">Dose depends on blood test. Ask your GP or oncologist for a test.</td>
+                                <td class="p-4">Very safe when correcting a deficiency. Don't self-dose high amounts.</td>
+                            </tr>
+                            <tr data-category="muscle">
+                                <td class="p-4 font-semibold">Omega-3 (EPA/DHA)</td>
+                                <td class="p-4">May help reduce inflammation and maintain weight/muscle (cachexia).</td>
+                                <td class="p-4"><span class="evidence-moderate">Moderate</span></td>
+                                <td class="p-4">~1-2 grams of combined EPA+DHA per day (from fish oil).</td>
+                                <td class="p-4">High doses can increase bleeding risk. Check with team if on blood thinners.</td>
+                            </tr>
+                            <tr data-category="symptom">
+                                <td class="p-4 font-semibold">Probiotics</td>
+                                <td class="p-4">May help prevent or reduce chemo/radiotherapy-related diarrhoea.</td>
+                                <td class="p-4"><span class="evidence-moderate">Moderate</span></td>
+                                <td class="p-4">Strain-specific. <i>Lactobacillus rhamnosus GG</i> (LGG) and <i>S. boulardii</i> have some of the best data.</td>
+                                <td class="p-4">Generally safe, but ask your team first, especially if you are severely neutropenic.</td>
+                            </tr>
+                            <tr data-category="symptom">
+                                <td class="p-4 font-semibold">L-Glutamine</td>
+                                <td class="p-4">May help reduce severity of sore mouth (mucositis) when used as a "swish and swallow."</td>
+                                <td class="p-4"><span class="evidence-low">Low</span> (Evidence is mixed)</td>
+                                <td class="p-4">Often studied as 10g powder in water, swished and swallowed, 3x/day.</td>
+                                <td class="p-4">Seems safe, but evidence for benefit is not strong.</td>
+                            </tr>
+                             <tr data-category="symptom">
+                                <td class="p-4 font-semibold">Zinc</td>
+                                <td class="p-4">May help with taste changes.</td>
+                                <td class="p-4"><span class="evidence-low">Low</span> (Evidence is mixed)</td>
+                                <td class="p-4">~50mg elemental zinc per day.</td>
+                                <td class="p-4">High-dose zinc long-term can cause copper deficiency. Only use short-term.</td>
+                            </tr>
+                            <tr data-category="general">
+                                <td class="p-4 font-semibold">Curcumin (from Turmeric)</td>
+                                <td class="p-4">Strong anti-inflammatory. Studied for general health.</td>
+                                <td class="p-4"><span class="evidence-low">Low</span> (for cancer outcomes)</td>
+                                <td class="p-4">Varies wildly. Often formulated for high absorption.</td>
+                                <td class="p-4">Can interact with blood thinners. May interact with some chemo drugs. <strong>Ask your team.</strong></td>
+                            </tr>
+                            <tr data-category="general">
+                                <td class="p-4 font-semibold">Medicinal Mushrooms</td>
+                                <td class="p-4">e.g., Turkey Tail, Reishi. Claimed to support immune function.</td>
+                                <td class="p-4"><span class="evidence-low">Low</span> (Mainly preclinical or small/foreign trials)</td>
+                                <td class="p-4">No standard dose.</td>
+                                <td class="p-4">Unknown interactions with chemo. Can have immunomodulatory effects. <strong>Not recommended without expert advice.</strong></td>
+                            </tr>
+                            <tr data-category="symptom">
+                                <td class="p-4 font-semibold">Cannabis / CBD</td>
+                                <td class="p-4">For appetite, nausea, sleep.</td>
+                                <td class="p-4"><span class="evidence-moderate">Moderate</span> (for some symptoms, e.g., nausea, but less than standard drugs)</td>
+                                <td class="p-4">Variable. Medical cannabis (e.g., Sativex) is prescription-only.</td>
+                                <td class="p-4">CBD can interact with many chemo drugs. <strong>Do not use without oncologist approval.</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-emerald-800 mb-4 mt-8">Common Myths vs. Facts</h3>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 divide-y divide-stone-200">
+                    <div class="py-3">
+                        <p class="font-semibold text-stone-800">Myth: "Sugar feeds cancer."</p>
+                        <p class="text-stone-700"><strong>Fact:</strong> All your cells, including healthy ones, use sugar (glucose) for energy. While it's smart to avoid *excess* sugar from sweets and sugary drinks, completely cutting out all sugar/carbs is not proven to help and can lead to dangerous weight loss.</p>
+                    </div>
+                    <div class="py-3">
+                        <p class="font-semibold text-stone-800">Myth: "An alkaline diet can cure cancer."</p>
+                        <p class="text-stone-700"><strong>Fact:</strong> This is a persistent myth with no scientific basis. You cannot change your body's blood pH with food. The diet is harmless (it encourages fruit/veg) but has no special anti-cancer effect.</p>
+                    </div>
+                    <div class="py-3">
+                        <p class="font-semibold text-stone-800">Myth: "I need a 'detox' to help my liver."</p>
+                        <p class="text-stone-700"><strong>Fact:</strong> Your liver is the detox organ; it doesn't need "detoxing" by special juices or supplements. In fact, many "detox" supplements are unregulated and can be harmful to the liver. The best way to support your liver is to avoid alcohol and eat a balanced diet as you are able.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- === TAB 6: CLINICIAN APPENDIX === -->
+            <section id="clinician" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Appendix for Your Clinical Team</h2>
+                <p class="text-lg text-stone-700 mb-6">Tom, you can show this section to your oncologist, dietitian, or pharmacist. It contains the clinical summaries and evidence ratings that this guide is based on.</p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 space-y-6">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Key Guidelines & Evidence Summary</h3>
+                        <ul class="list-disc list-inside space-y-4">
+                            <li><strong>Protein & Energy:</strong> Evidence consistently supports enhanced energy (25-30 kcal/kg/day) and protein (1.2-1.5 g/kg/day) targets to prevent/treat cachexia and maintain muscle mass during treatment. (Ref: ESPEN, ASCO Guidelines). Weight maintenance is a key prognostic factor.</li>
+                            <li><strong>Dietary Patterns:</strong> Strong cohort data supports Mediterranean and "Prudent" (high fruit/veg/whole grain) patterns for CRC survivors. Evidence for keto/fasting during chemo is preliminary (small RCTs) and carries significant risk of weight loss; not recommended as standard of care.</li>
+                            <li><strong>Fibre & Microbiome:</strong> High fibre intake is robustly associated with improved CRC survival. This must be balanced with low-residue diets for acute symptoms (diarrhoea, obstruction). Probiotic use (esp. LGG) has moderate backing for reducing incidence/severity of chemo-related diarrhoea.</li>
+                            <li><strong>Omega-3 (EPA/DHA):</strong> Moderate evidence from multiple RCTs supports using ~2g/day of EPA+DHA for inflammation modulation and as part of a multimodal strategy to attenuate cachexia. Requires monitoring with anticoagulants.</li>
+                            <li><strong>Vitamin D:</strong> High prevalence of deficiency in cancer patients. Correction is 'High' evidence for skeletal health. Association with CRC outcomes is strong but intervention data is still emerging. Testing is recommended.</li>
+                            <li><strong>Folate & 5-FU:</strong> High-dose folic acid supplementation is contraindicated as it may reduce 5-FU efficacy. Folinic acid (leucovorin) given *with* 5-FU is therapeutic, acting to stabilise the drug-enzyme complex.</li>
+                            <li><strong>Drug-Nutrient Interactions (High Evidence):</strong>
+                                <ul>
+                                    <li>- <strong>St. John's Wort:</strong> Potent CYP3A4 inducer, significantly reduces irinotecan exposure. Avoid.</li>
+                                    <li>- <strong>Grapefruit/Seville Orange:</strong> Potent UGT1A1 & CYP3A4 inhibitor, significantly increases irinotecan/5-FU toxicity. Avoid.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Liver Considerations:</strong> No evidence supports "detox" diets. In case of liver mets or mild hepatotoxicity, the goal is safe, adequate nutrition. Avoid unvetted herbal supplements which may be hepatotoxic.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-emerald-800 mb-3">Key References (for Clinician Review)</h3>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-blue-700 underline">
+                            <li>Arends, J., et al. (2017). ESPEN guidelines on nutrition in cancer patients. <i>Clinical Nutrition</i>. (DOI: 10.1016/j.clnu.2016.07.015)</li>
+                            <li>Rock, C. L., et al. (2022). Cancer Prevention and Treatment Through Diet and Lifestyle. <i>ASCO Educational Book</i>. (DOI: 10.1200/EDBK_349706)</li>
+                            <li>Caan, B. J., et al. (2018). Association of Baseline and Postdiagnosis Body Mass Index With Survival in Patients With Colorectal Cancer. <i>JAMA Oncology</i>. (DOI: 10.1001/jamaoncol.2018.0165)</li>
+                            <li>van der Meij, B. S., et al. (2018). Oral nutritional supplements containing n-3 polyunsaturated fatty acids affect muscle mass and strength in cancer patients: a systematic review and meta-analysis of randomized controlled trials. <i>Journal of Cachexia, Sarcopenia and Muscle</i>. (DOI: 10.1002/jcsm.12296)</li>
+                            <li>Wang, Y., et al. (2019). Probiotics for the Prevention and Treatment of Chemotherapy-Related Diarrhea in People with Colorectal Cancer: A Meta-Analysis. <i>Nutrition and Cancer</i>. (DOI: 10.1080/01635581.2019.1654413)</li>
+                            <li>NCCN Guidelines for PatientsÂ®: Colorectal Cancer. (Available at NCCN.org)</li>
+                            <li>Macmillan Cancer Support (UK). (Available at macmillan.org.uk/cancer-information-and-support/impacts-of-cancer/eating-well)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mainNav = document.getElementById('main-nav');
+            const navButtons = mainNav.querySelectorAll('.nav-button');
+            const tabContents = document.getElementById('tab-content-container').querySelectorAll('.tab-content');
+
+            mainNav.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.nav-button');
+                if (!targetButton) return;
+
+                const tabId = targetButton.dataset.tab;
+
+                navButtons.forEach(btn => {
+                    btn.classList.remove('active-tab');
+                });
+                targetButton.classList.add('active-tab');
+
+                tabContents.forEach(content => {
+                    if (content.id === tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+
+            const symptomNav = document.getElementById('symptom-nav');
+            const symptomButtons = symptomNav ? symptomNav.querySelectorAll('.sub-nav-button') : [];
+            const symptomContents = document.querySelectorAll('.symptom-content');
+
+            if (symptomNav) {
+                symptomNav.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('.sub-nav-button');
+                    if (!targetButton) return;
+
+                    const symptomId = `symptom-${targetButton.dataset.symptom}`;
+
+                    symptomButtons.forEach(btn => {
+                        btn.classList.remove('active-sub-tab');
+                    });
+                    targetButton.classList.add('active-sub-tab');
+
+                    symptomContents.forEach(content => {
+                        if (content.id === symptomId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            }
+
+            const supplementNav = document.getElementById('supplement-nav');
+            const supplementButtons = supplementNav ? supplementNav.querySelectorAll('.sub-nav-button') : [];
+            const supplementRows = document.getElementById('supplement-table') ? document.getElementById('supplement-table').querySelectorAll('tbody tr') : [];
+
+            if (supplementNav) {
+                supplementNav.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('.sub-nav-button');
+                    if (!targetButton) return;
+                    
+                    const filter = targetButton.dataset.filter;
+
+                    supplementButtons.forEach(btn => btn.classList.remove('active-sub-tab'));
+                    targetButton.classList.add('active-sub-tab');
+
+                    supplementRows.forEach(row => {
+                        if (filter === 'all' || row.dataset.category === filter) {
+                            row.style.display = 'table-row';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            const weightSlider = document.getElementById('weight-slider');
+            const weightLabel = document.getElementById('weight-label');
+            const proteinCanvas = document.getElementById('proteinChart');
+            let proteinChart;
+
+            function updateProteinChart(weight) {
+                if (!weightLabel || !proteinChart) return;
+
+                weightLabel.textContent = `${weight} kg (~${(weight / 6.35).toFixed(1)} st)`;
+                
+                const minProtein = weight * 1.2;
+                const maxProtein = weight * 1.5;
+                const perMeal = (minProtein + maxProtein) / 2 / 4; 
+
+                proteinChart.data.datasets[0].data[0] = minProtein;
+                proteinChart.data.datasets[1].data[0] = maxProtein;
+                proteinChart.data.datasets[2].data[0] = perMeal;
+                proteinChart.options.scales.y.max = Math.max(200, maxProtein + 20);
+                proteinChart.update();
+            }
+
+            if (weightSlider && proteinCanvas) {
+                const ctx = proteinCanvas.getContext('2d');
+                proteinChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Your Daily Protein (grams)'],
+                        datasets: [
+                            {
+                                label: 'Minimum (1.2g/kg)',
+                                data: [0],
+                                backgroundColor: '#a3e635', 
+                                barThickness: 40,
+                            },
+                            {
+                                label: 'Target (1.5g/kg)',
+                                data: [0],
+                                backgroundColor: '#65a30d', 
+                                barThickness: 40,
+                            },
+                            {
+                                label: 'Example Per-Meal Target',
+                                data: [0],
+                                backgroundColor: '#fde047', 
+                                barThickness: 40,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 200,
+                                title: {
+                                    display: true,
+                                    text: 'Grams of Protein per Day'
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x.toFixed(1) + 'g';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+
+                weightSlider.addEventListener('input', (e) => {
+                    updateProteinChart(e.target.value);
+                });
+                
+                updateProteinChart(weightSlider.value);
+            }
+        });
+		// Mobile menu toggle - Add to existing script or create new script tag
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+    
+    // Your existing page JavaScript continues here...
+});
+    </script>
+
+</body>
+</html>
