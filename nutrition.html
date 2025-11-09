@@ -23,6 +23,38 @@
             font-family: 'Inter', sans-serif;
             background-color: #fdfdfc; 
         }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            color: #1e40af;
+            font-weight: 700;
+        }
+        .mobile-menu-button {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            animation: dustyBluePulse 2.8s ease-in-out infinite;
+            color: inherit;
+        }
+        .mobile-menu-button svg {
+            width: 36px;
+            height: 36px;
+        }
+        .mobile-menu-button svg path {
+            stroke-width: 3;
+        }
+        @keyframes dustyBluePulse {
+            0%, 100% {
+                box-shadow: 0 0 0 rgba(93, 133, 193, 0);
+            }
+            50% {
+                box-shadow: 0 0 18px rgba(93, 133, 193, 0.6);
+            }
+        }
         .chart-container {
             position: relative;
             width: 100%;
@@ -111,34 +143,41 @@
             font-weight: 600;
             font-size: 0.875rem;
         }
+        @media (min-width: 641px) {
+            .nav-link,
+            .menu-item,
+            .navbar a {
+                font-weight: 700;
+            }
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
 <!-- Navigation Header - Add this right after <body> tag -->
 <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-            <div class="flex items-center">
+        <div class="relative flex items-center h-16">
+            <div class="flex-1 flex items-center justify-center md:justify-start">
                 <a href="index.html" class="flex items-center">
                     <img src="assets/tomslogo.png" alt="Tom's Care Hub Logo" class="h-10 w-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <h1 class="text-2xl font-bold text-teal-700" style="display:none;">Tom's Care Hub</h1>
                 </a>
             </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="index.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Home</a>
-                <a href="chemo.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Chemo</a>
-                <a href="nutrition.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Nutrition</a>
-                <a href="mindfulness.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Mindfulness</a>
-                <a href="research.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Research</a>
-                <a href="Alternative.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Alternative</a>
-                <a href="resources.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Resources</a>
-                <a href="financial-support.html" class="text-gray-700 hover:text-gray-900 px-3 py-2 transition-all">Financial Support</a>
+            <div class="hidden md:flex space-x-8 ml-auto">
+                <a href="index.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Home</a>
+                <a href="chemo.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Chemo</a>
+                <a href="nutrition.html" class="nav-link active px-3 py-2">Nutrition</a>
+                <a href="mindfulness.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Mindfulness</a>
+                <a href="research.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Research</a>
+                <a href="Alternative.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Alternative</a>
+                <a href="resources.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Resources</a>
+                <a href="financial-support.html" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2">Financial Support</a>
             </div>
             <!-- Mobile menu button -->
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500 p-2">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <div class="absolute inset-y-0 left-0 flex items-center md:hidden">
+                <button id="mobile-menu-button" class="mobile-menu-button text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500">
+                    <svg class="h-9 w-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
             </div>
@@ -148,7 +187,7 @@
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
         <a href="index.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Home</a>
         <a href="chemo.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Chemo</a>
-        <a href="nutrition.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Nutrition</a>
+        <a href="nutrition.html" class="block px-4 py-3 text-gray-900 font-semibold hover:bg-gray-50">Nutrition</a>
         <a href="mindfulness.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Mindfulness</a>
         <a href="research.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Research</a>
         <a href="Alternative.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Alternative</a>
