@@ -2,6 +2,7 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tom's Care Hub - Your Personal Cancer Care Resource</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -58,12 +59,18 @@
         /* Scrolling banner styles */
         .banner-container {
             overflow: hidden;
+            overflow-x: auto;
             background: linear-gradient(90deg, #0d9488 0%, #1e40af 50%, #7c3aed 100%);
             position: relative;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .banner-container::-webkit-scrollbar {
+            display: none;
         }
         .banner-track {
             display: flex;
-            animation: scroll-left 40s linear infinite;
+            animation: scroll-left 20s linear infinite;
             will-change: transform;
         }
         .banner-track:hover {
@@ -96,6 +103,12 @@
         }
         .banner-icon {
             font-size: 1.2rem;
+        }
+        .ticker.dragging {
+            cursor: grabbing;
+        }
+        .ticker.dragging .banner-track {
+            animation-play-state: paused;
         }
     </style>
 </head>
@@ -144,7 +157,7 @@
     </nav>
 
     <!-- Scrolling Banner -->
-    <div class="banner-container py-3">
+    <div class="banner-container ticker py-3">
         <div id="banner-track" class="banner-track">
             <!-- Banner items will be dynamically populated twice for seamless loop -->
         </div>
@@ -512,12 +525,46 @@
         document.addEventListener('DOMContentLoaded', function() {
             populateBanner();
             renderQuickCards();
-            
+
             // Refresh cards occasionally for variety
             setInterval(() => {
                 renderQuickCards();
             }, 30000); // Refresh every 30 seconds
         });
+
+        (function () {
+            var el = document.querySelector('.banner-container.ticker, .ticker, .marquee, [data-ticker]');
+            if (!el) return;
+
+            var isDown = false, startX = 0, scrollLeft = 0;
+
+            var start = function (e) {
+                isDown = true;
+                el.classList.add('dragging');
+                startX = (e.touches ? e.touches[0].pageX : e.pageX) - el.offsetLeft;
+                scrollLeft = el.scrollLeft;
+            };
+            var move = function (e) {
+                if (!isDown) return;
+                e.preventDefault();
+                var x = (e.touches ? e.touches[0].pageX : e.pageX) - el.offsetLeft;
+                var walk = x - startX;
+                el.scrollLeft = scrollLeft - walk;
+            };
+            var end = function () {
+                isDown = false;
+                el.classList.remove('dragging');
+            };
+
+            el.addEventListener('mousedown', start, { passive: true });
+            el.addEventListener('mousemove', move, { passive: false });
+            el.addEventListener('mouseleave', end, { passive: true });
+            el.addEventListener('mouseup', end, { passive: true });
+
+            el.addEventListener('touchstart', start, { passive: true });
+            el.addEventListener('touchmove', move, { passive: false });
+            el.addEventListener('touchend', end, { passive: true });
+        })();
     </script>
 </body>
 </html>
